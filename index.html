@@ -1,0 +1,118 @@
+
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Jame</title>
+
+    <!-- FONTS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Acme">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Fondamento&display=swap" rel="stylesheet">
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <!-- G-SIGN-IN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="1067396300547-edr62st5no3g80b7vu01ab9ci8f6tnpk.apps.googleusercontent.com">
+    
+    <!-- LOCAL -->
+    <script src="js/gamemanager.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/enemy.js"></script>
+    <script src="main.js"></script>
+    <link rel="stylesheet" href="styles2.css">
+
+    <style>
+        .g-signout {
+            display : none;
+            background-color: inherit;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <p>
+            Hey! I guess this is technically a game!
+        </p>
+        <h2>Go ahead and choose!</h2>
+    </div>
+    <div class="g-banner" id="gBanner">
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+        <div class="g-signout">
+            <p>Email Address</p>
+            <p id="email" class="alert alert-danger"></p>
+            <button onclick="signOut()" class="btn btn-danger"> Sign Out </button>
+        </div>
+    </div>
+    
+
+
+    <div class="interface">
+
+        
+
+        <a href="#" onclick="GameManager.setGameStart('Warrior')">
+            <img src="Placeholder1.png" alt="warrior">
+            <div>
+                <h3>Warriors</h3>
+                <p>Tanky individuals with lots of vitality and endurance</p>
+            </div>
+        </a>
+
+        <a href="#" onclick="GameManager.setGameStart('Rogue')">
+            <img src="Placeholder2.png" alt="rogue">
+            <div>
+                <h3>Rogue</h3>
+                <p>Able to attack swiftly and multiple times at minimal damage</p>
+            </div>
+        </a>
+
+        <a href="#" onclick="GameManager.setGameStart('Mage')" >
+            <img src="Placeholder3.jpg" alt="mage">
+            <div>
+                <h3>Mage</h3>
+                <p>Learned and experienced, deal massive damage but cannot withstand much </p>
+            </div>
+        </a>
+
+        <a href="#" onclick="GameManager.setGameStart('Hunter')">
+            <img src="Placeholder1.png" alt="hunter">
+            <div>
+                <h3>Hunter</h3>
+                <p>Both strong and quick, but limited in either aspect</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="actions">
+        
+    </div>
+
+    <div class="arena">
+        
+    </div>
+
+    <div class="enemy">
+        
+    </div>
+
+</body>
+</html>
