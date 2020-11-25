@@ -26,7 +26,7 @@ let GameManager = {
         }
 
         let getInterface = document.querySelector(".interface");
-        getInterface.innerHTML = '<img src="Placeholder3.jpg" class="img-avatar"><div><h3>'+classType+'</h3><p class="health-player">Health : '+ player.health+'</p><p class="mana-player">Mana : '+ player.mana+'</p><p class="strength-player">Strength : '+ player.strength+'</p><p>Agility : '+ player.agility+'</p><p>Speed : '+ player.speed+'</p></div>';
+        getInterface.innerHTML = '<img src="Placeholder3.png" class="img-avatar"><div><h3>'+classType+'</h3><p class="health-player">Health : '+ player.health+'</p><p class="mana-player">Mana : '+ player.mana+'</p><p class="strength-player">Strength : '+ player.strength+'</p><p>Agility : '+ player.agility+'</p><p>Speed : '+ player.speed+'</p></div>';
         getInterface.style.display = "flex";
     
     },
@@ -67,7 +67,7 @@ let GameManager = {
         // getActions.innerHTML += '<a href="#" class="btn-prefight-boost" onclick="PlayerMoves.calcBoost()">Boost next Attack!</a>';
 
         getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-attack" onclick="PlayerMoves.calcAttack()">Attack!  </button>';
-        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost tooltipp" onclick="PlayerMoves.calcBoost()">Boost next Attack! <span class="tooltipptext">Costs 20 Strength <br>Single Use</br> </span></button>'; 
+        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost tooltipp" onclick="PlayerMoves.calcBoost()">Boost next Attack! <span class="tooltipptext">Costs 20 Strength </span></button>'; 
 
         if (player.mana > 10)
         {

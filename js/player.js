@@ -194,7 +194,6 @@ let PlayerMoves = {
         player.strength = player.strength - 20;
 
         getPlayerStrength.innerHTML = 'Strength : '+player.strength;
-
     },
 
     calcHeal : function(){
