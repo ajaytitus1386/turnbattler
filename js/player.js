@@ -87,7 +87,7 @@ let PlayerMoves = {
 
             if(totalDamage>70)
             {
-                msg="Critical Attack!";
+                msg="<b>Critical Attack! </b>";
             }
             enemy.health = enemy.health - totalDamage;
 
@@ -157,7 +157,7 @@ let PlayerMoves = {
 
                 if(totalDamage>70)
                 {
-                    msg="Critical Attack!";
+                    msg="<b>Critical Attack! </b>";
                 }
 
 
@@ -184,10 +184,17 @@ let PlayerMoves = {
 
         let getArena = document.querySelector(".arena");
         let getBoost = document.querySelector(".btn-boost");
+        let getPlayerStrength = document.querySelector(".strength-player");
 
-        getBoost.style.visibility = "hidden";
+        if(player.strength <=50) { getBoost.style.visibility = "hidden"; }
+        
         boostMultiplier = ((Math.random() * 1) + 1);
         getArena.innerHTML += "<p>Next Attack boosted times " + boostMultiplier.toFixed(2) + " </p>";
+
+        player.strength = player.strength - 20;
+
+        getPlayerStrength.innerHTML = 'Strength : '+player.strength;
+
     },
 
     calcHeal : function(){
@@ -202,7 +209,7 @@ let PlayerMoves = {
         player.health = player.health + amountHeal;
         player.mana = player.mana - 40;
 
-        if(player.mana <= 0)
+        if(player.mana <= 40)
         {
             getHeal.style.visibility = "hidden";
         }

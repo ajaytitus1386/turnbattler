@@ -1,6 +1,41 @@
-.tooltip {
-    width:inherit;
-    background-color: red;
+*:focus {
+    outline : 0 !important
+}
+
+.tooltipp {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltipp .tooltipptext {
+    visibility: hidden;
+    width: auto;
+    background-color: #2D2D2A;
+    color: #fff;
+    text-align: center;
+    padding : 5px;
+    border-radius: 6px;
+    position:absolute;
+    z-index: 1;
+    top: 100%;
+    left: 35%;
+    margin-left: auto; /*half of width */
+}
+
+.tooltipp:hover .tooltipptext {
+    visibility: visible;
+}
+
+.tooltipp .tooltipptext::after {
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    left:50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #2D2D2A transparent;
 }
 
 .g-banner {
@@ -157,6 +192,8 @@ body {
     width: 100%;
     min-height: 180px;
     height: fit-content;
+    font-size: 15px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: #FBFAF8;
     text-align: center;
     background-color: #3F5E5A;

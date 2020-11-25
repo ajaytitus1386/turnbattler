@@ -26,7 +26,7 @@ let GameManager = {
         }
 
         let getInterface = document.querySelector(".interface");
-        getInterface.innerHTML = '<img src="Placeholder3.jpg" class="img-avatar"><div><h3>'+classType+'</h3><p class="health-player">Health : '+ player.health+'</p><p class="mana-player">Mana : '+ player.mana+'</p><p>Strength : '+ player.strength+'</p><p>Agility : '+ player.agility+'</p><p>Speed : '+ player.speed+'</p></div>';
+        getInterface.innerHTML = '<img src="Placeholder3.jpg" class="img-avatar"><div><h3>'+classType+'</h3><p class="health-player">Health : '+ player.health+'</p><p class="mana-player">Mana : '+ player.mana+'</p><p class="strength-player">Strength : '+ player.strength+'</p><p>Agility : '+ player.agility+'</p><p>Speed : '+ player.speed+'</p></div>';
         getInterface.style.display = "flex";
     
     },
@@ -36,7 +36,7 @@ let GameManager = {
         let getArena = document.querySelector(".arena")
         getHeader.innerHTML = '<p>Lets Get Fighting!</p>'
         //getActions.innerHTML = '<a href="#" role="button" class="btn prefight" onclick="GameManager.setFight()">Looking for Battle</a>';
-        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-block" onclick="GameManager.setFight()">Looking for Battle</button>';
+        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-block tooltipp" onclick="GameManager.setFight()">Looking for Battle <span class="tooltipptext">Finds a random enemy to fight</span> </button>'; 
         getArena.style.visibility = "visible";
     },
 
@@ -67,11 +67,11 @@ let GameManager = {
         // getActions.innerHTML += '<a href="#" class="btn-prefight-boost" onclick="PlayerMoves.calcBoost()">Boost next Attack!</a>';
 
         getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-attack" onclick="PlayerMoves.calcAttack()">Attack!  </button>';
-        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost" onclick="PlayerMoves.calcBoost()">Boost next Attack!</button>';
+        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost tooltipp" onclick="PlayerMoves.calcBoost()">Boost next Attack! <span class="tooltipptext">Costs 20 Strength <br>Single Use</br> </span></button>'; 
 
         if (player.mana > 10)
         {
-            getActions.innerHTML += '<button type="button" class="btn btn-success btn-lg btn-heal" onclick="PlayerMoves.calcHeal()">Heal Self</button>';
+            getActions.innerHTML += '<button type="button" class="btn btn-success btn-lg btn-heal tooltipp" onclick="PlayerMoves.calcHeal()">Heal Self <span class="tooltipptext">Costs 40 Mana</span> </button>'; 
         }
         if (player.speed > enemy.speed){
             getArena.innerHTML = '<p>Quick Hands! You attack before your enemy.</p>';
