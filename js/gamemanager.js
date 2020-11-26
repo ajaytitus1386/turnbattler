@@ -30,7 +30,7 @@ let GameManager = {
         maxPlayerTime = Math.floor( (2 * (player.agility + player.speed)) / ((player.agility) * (player.speed) / 100) ); //Timer max time
 
         let getInterface = document.querySelector(".interface");
-        getInterface.innerHTML = '<img src="imgs/'+classType+'.png" class="img-avatar"><div><h3>'+classType+'</h3><p class="health-player">Health : '+ player.health+'</p><p class="mana-player">Mana : '+ player.mana+'</p><p class="strength-player">Strength : '+ player.strength+'</p><p>Agility : '+ player.agility+'</p><p>Speed : '+ player.speed+'</p></div>';
+        getInterface.innerHTML = '<img src="imgs/'+classType.toLowerCase()+'.png" class="img-avatar"><div><h3>'+classType+'</h3><p class="health-player">Health : '+ player.health+'</p><p class="mana-player">Mana : '+ player.mana+'</p><p class="strength-player">Strength : '+ player.strength+'</p><p>Agility : '+ player.agility+'</p><p>Speed : '+ player.speed+'</p></div>';
         getInterface.style.display = "flex";
         getInterface.innerHTML += '<progress class="local-progress-bar" value="0" max='+maxPlayerTime+' id="player-progress-bar"></progress>';
         
