@@ -2,6 +2,13 @@ let player
 
 let boostMultiplier = 1;
 
+var maxPlayerTime = 10;
+
+var playerMaxMana = 0;
+
+var playerMaxHealth = 0;
+
+
 function Player(classType, health , mana, strength, agility, speed) {
     this.classType=classType;
     this.health = health;
@@ -11,15 +18,17 @@ function Player(classType, health , mana, strength, agility, speed) {
     this.speed = speed;
 }
 
-let warrior = new Player("Warrior", 200, 0, 200, 80, 50);
+let warrior = new Player("Warrior", 300, 0, 200, 80, 80);
 
-let rogue = new Player("Rogue", 100, 0, 60, 140, 180);
+let rogue = new Player("Rogue", 200, 0, 60, 120, 140);
 
-let mage = new Player("Mage", 80, 200, 50, 100, 100);
+let mage = new Player("Mage", 150, 200, 50, 100, 100);
 
-let hunter = new Player("Hunter", 120, 40, 80, 120, 150);
+let hunter = new Player("Hunter", 220, 40, 80, 120, 120);
+
 
 let PlayerMoves = {
+    
     calcAttack : function(){
         let getPlayerSpeed = player.speed;
         let getEnemySpeed = enemy.speed;
@@ -98,7 +107,7 @@ let PlayerMoves = {
 
 
                 //WIN CONDI
-                getArena.innerHTML += "<p>Well Done! You defeated your enemy!</p>";
+                getArena.innerHTML += "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
                 getPlayerHealth.innerHTML = 'Health : ' + player.health;
                 getEnemyHealth.innerHTML = 'Health : 0';
                 getActions.style.visibility = "hidden";
@@ -114,7 +123,7 @@ let PlayerMoves = {
 
                 if (player.health <=0){
 
-                    getArena.innerHTML+= "<p>Drat! You were defeated by your enemy!</p>";
+                    getArena.innerHTML+= "<p>Defeat! You were defeated by your enemy!</p>";
 
                     getEnemyHealth.innerHTML = 'Health : ' + enemy.health;
                     getPlayerHealth.innerHTML = 'Health : 0';
@@ -139,7 +148,7 @@ let PlayerMoves = {
             getArena.innerHTML += "<p class='arena-enemy'>Dang! The enemy has dealt a total "+totalDamage+" Damage in "+enemyAttackValues[1]+" attack(s).</p>";
             if (player.health <=0){
 
-                getArena.innerHTML+= "<p>Drat! You were defeated by your enemy!</p>";
+                getArena.innerHTML+= "<p>Defeat! You were defeated by your enemy!</p>";
 
                 getEnemyHealth.innerHTML = 'Health : ' + enemy.health;
                 getPlayerHealth.innerHTML = 'Health : 0';
@@ -166,7 +175,7 @@ let PlayerMoves = {
                 if (enemy.health <=0){
 
                     //WIN CONDI
-                    getArena.innerHTML += "<p>Well Done! You defeated your enemy!</p>";
+                    getArena.innerHTML += "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
 
                     getPlayerHealth.innerHTML = 'Health : ' + player.health;
                     getEnemyHealth.innerHTML = 'Health : 0';
@@ -180,20 +189,119 @@ let PlayerMoves = {
         }
     },
 
+    playerAttackOnTimer : function() {
+        let getPlayerSpeed = player.speed;
+        let getEnemySpeed = enemy.speed;
+
+        let getArena = document.querySelector(".arena");
+        let getActions = document.querySelector(".actions");
+
+        let playerAttack = function() {
+            let calcBaseDamage;
+            // DMG stats here
+            if(player.mana>player.agility){
+                calcBaseDamage = Math.floor((player.strength+1) * (player.mana+1) * (player.agility+1) /40000);
+                console.log(calcBaseDamage);
+            }
+            else {
+                calcBaseDamage = Math.floor(player.strength * player.agility /1000);
+            }
+
+            calcBaseDamage = Math.floor(calcBaseDamage * boostMultiplier);
+
+            let offsetDamage = Math.floor(Math.random() * Math.floor(10));
+            let calcOutputDamage = calcBaseDamage + offsetDamage;
+
+            let numberOfHits = (Math.floor(Math.random() * Math.floor(player.agility / 10) / 2 )) + 1;
+
+            let attackValues = [calcOutputDamage,numberOfHits];
+
+            boostMultiplier = 1;
+
+            return attackValues;
+        }
+        let getPlayerHealth = document.querySelector(".health-player");
+        let getEnemyHealth = document.querySelector(".health-enemy");
+
+        let playerAttackValues = playerAttack();
+        let totalDamage = playerAttackValues[0] * playerAttackValues[1];
+
+        let msg = "Nice! ";
+
+        if(totalDamage>70)
+        {
+            msg="<b>Critical Attack! </b>";
+        }
+        enemy.health = enemy.health - totalDamage;
+
+
+        getArena.innerHTML += "<p class='arena-player'>"+msg + totalDamage+" Damage total dealt in "+playerAttackValues[1]+" attack(s).</p>";
+
+        if (enemy.health <=0){
+
+
+            //WIN CONDI
+            getArena.innerHTML += "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
+            getPlayerHealth.innerHTML = 'Health : ' + player.health;
+            getEnemyHealth.innerHTML = 'Health : 0';
+            getActions.style.visibility = "hidden";
+
+            //End both timers
+        }
+        else {
+            getEnemyHealth.innerHTML = 'Health : ' + enemy.health;
+        }
+
+        this.startPlayerTimer();
+    },
+
+    startPlayerTimer : function() {
+        
+        var playerButtons = document.querySelectorAll(".btn-player");
+        for (var i=0;i<playerButtons.length;i++)
+                {
+                    playerButtons[i].disabled = true;
+                }
+        var playerTime = maxPlayerTime;
+        var playerTimerVar = setInterval(function progressPlayerTimer() {
+            document.getElementById("player-progress-bar").value = maxPlayerTime - --playerTime;
+            if(playerTime <=0 )
+            {
+                //Buttons enabled
+            
+                for (var i=0;i<playerButtons.length;i++)
+                {
+                    playerButtons[i].disabled = false;
+                }
+                //On player click disables and starts timer
+                clearInterval(playerTimerVar);
+                playerTime = maxPlayerTime;
+                document.getElementById("player-progress-bar").value = 0;
+            }
+
+        },1000)
+    },
+
     calcBoost : function(){
 
         let getArena = document.querySelector(".arena");
         let getBoost = document.querySelector(".btn-boost");
         let getPlayerStrength = document.querySelector(".strength-player");
 
-        if(player.strength <=50) { getBoost.style.visibility = "hidden"; }
+        if(player.strength <=50) { 
+            //getBoost.style.visibility = "hidden"; 
+            getBoost.disabled = true;
+            getBoost.classList.remove("btn-player");
+        }
         
         boostMultiplier = ((Math.random() * 1) + 1);
-        getArena.innerHTML += "<p>Next Attack boosted times " + boostMultiplier.toFixed(2) + " </p>";
+        getArena.innerHTML += "<p>Next Attack boosted by times " + boostMultiplier.toFixed(2) + " </p>";
 
         player.strength = player.strength - 20;
 
         getPlayerStrength.innerHTML = 'Strength : '+player.strength;
+
+        this.startPlayerTimer();
     },
 
     calcHeal : function(){
@@ -202,7 +310,8 @@ let PlayerMoves = {
         let getPlayerMana = document.querySelector(".mana-player");
         let getHeal = document.querySelector(".btn-heal");
 
-        let amountHeal = Math.floor(player.mana * (Math.floor(Math.random() * Math.floor(10)) + 1) / 80) + 1   ;
+        //let amountHeal = Math.floor(40 * (Math.floor((player.mana)/40 * Math.floor(10))%40 + 1) / 8   ) + 1 ;
+        let amountHeal = Math.floor(40 * (Math.random() * Math.floor(10) + player.mana) / playerMaxMana )
         getArena.innerHTML += "<p>Healed Self by "+amountHeal+" HP</p>";
 
         player.health = player.health + amountHeal;
@@ -210,11 +319,13 @@ let PlayerMoves = {
 
         if(player.mana <= 40)
         {
-            getHeal.style.visibility = "hidden";
+            //getHeal.style.visibility = "hidden";
+            getHeal.disabled = true;
+            getHeal.classList.remove("btn-player");
         }
         getPlayerHealth.innerHTML = 'Health : ' + player.health;
         getPlayerMana.innerHTML = 'Mana : ' + player.mana;
 
-
+        this.startPlayerTimer();
     }
 }

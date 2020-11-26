@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Acme">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Fondamento&display=swap" rel="stylesheet">
+
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
     
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -48,14 +51,14 @@
 <body>
 
     <div class="header">
-        <p>
+        <p class="prelude">
             Hey! I guess this is technically a game!
         </p>
         <h2>Go ahead and choose!</h2>
+        <h3>Refresh at any time to return to this page</h3>
     </div>
     <div class="g-banner" id="gBanner">
         <div class="g-signin2" data-onsuccess="onSignIn"></div>
-
         <div class="g-signout">
             <p>Email Address</p>
             <p id="email" class="alert alert-danger"></p>
@@ -65,12 +68,10 @@
     
 
 
-    <div class="interface">
-
-        
+    <div class="interface">        
 
         <a href="#" onclick="GameManager.setGameStart('Warrior')">
-            <img src="Placeholder1(1).png" alt="warrior">
+            <img src="imgs/warrior.png" alt="warrior">
             <div>
                 <h3>Warriors</h3>
                 <p>Tanky individuals with lots of vitality and endurance</p>
@@ -78,7 +79,7 @@
         </a>
 
         <a href="#" onclick="GameManager.setGameStart('Rogue')">
-            <img src="Placeholder2(1).png" alt="rogue">
+            <img src="imgs/rogue.png" alt="rogue">
             <div>
                 <h3>Rogue</h3>
                 <p>Able to attack swiftly and multiple times at minimal damage</p>
@@ -86,7 +87,7 @@
         </a>
 
         <a href="#" onclick="GameManager.setGameStart('Mage')" >
-            <img src="Placeholder3.png" alt="mage">
+            <img src="imgs/mage.png" alt="mage">
             <div>
                 <h3>Mage</h3>
                 <p>Learned and experienced, deal massive damage but cannot withstand much </p>
@@ -94,7 +95,7 @@
         </a>
 
         <a href="#" onclick="GameManager.setGameStart('Hunter')">
-            <img src="Placeholder1(1).png" alt="hunter">
+            <img src="imgs/hunter.png" alt="hunter">
             <div>
                 <h3>Hunter</h3>
                 <p>Both strong and quick, but limited in either aspect</p>
@@ -107,12 +108,17 @@
     </div>
 
     <div class="arena">
-        
+        <div class="instructions">
+            <h2>Instructions</h2>
+            <p>This is a turn based battler that uses a turn timer displayed near your character. Your enemy will attack repeatedly on each turn. On your turn, you choose between your available actions. You and the enemy have separate timers based on your stats.<br>This section will show details during the fight.<br> Remember not to spam the action buttons as each turn takes a certain time to complete!</p>
+        </div>
     </div>
 
     <div class="enemy">
-        
     </div>
 
+    <div class="footer">
+        Thanks for checking out the site! This was initially inspired by a <a href="https://www.youtube.com/watch?v=M6sA8fvMCuA&list=PL0eyrZgxdwhxNGMWROnaY35NLyEjTqcgB&index=23&t=4s" target="_blank">video</a> made by Dani Krossing.
+    </div>
 </body>
 </html>
