@@ -1,3 +1,16 @@
+let pauseCondition = true;
+let enemies = [];
+var gameOutcome;
+
+let music_active = true;
+var ff7_battle = new Audio('audio/ff7-battle.wav');
+var ff7_victory = new Audio('audio/ff7_victory.wav');
+var ff7_defeat = new Audio('audio/ff7_defeat.wav');
+
+ff7_battle.volume = 0.5;
+ff7_victory.volume = 0.5;
+ff7_defeat.volume = 0.5;
+
 let GameManager = {
     setGameStart: function(classType) {
         this.resetPlayer(classType);
@@ -30,20 +43,27 @@ let GameManager = {
         maxPlayerTime = Math.floor( (2 * (player.agility + player.speed)) / ((player.agility) * (player.speed) / 100) ); //Timer max time
 
         let getInterface = document.querySelector(".interface");
-        getInterface.innerHTML = '<img src="imgs/'+classType.toLowerCase()+'.png" class="img-avatar"><div><h3>'+classType+'</h3><p class="health-player">Health : '+ player.health+'</p><p class="mana-player">Mana : '+ player.mana+'</p><p class="strength-player">Strength : '+ player.strength+'</p><p>Agility : '+ player.agility+'</p><p>Speed : '+ player.speed+'</p></div>';
+        getInterface.innerHTML = '<img src="imgs/'+classType.toLowerCase()+'.png" class="img-avatar"><div><h3>'+classType+'</h3><p class="health-player">Health : '+ player.health+'</p><p class="mana-player">Mana : '+ player.mana+'</p><p class="strength-player">Strength : '+ player.strength+'</p><p>Agility : '+ player.agility+'</p><p>Speed : '+ player.speed+'</p> <p> <p class="progress-indicator" id="player-progress-indicator"></p> <progress class="local-progress-bar" value="0" max='+maxPlayerTime+' id="player-progress-bar"> </progress> </p> </div>';
         getInterface.style.display = "flex";
-        getInterface.innerHTML += '<progress class="local-progress-bar" value="0" max='+maxPlayerTime+' id="player-progress-bar"></progress>';
+        //getInterface.innerHTML += '<progress class="local-progress-bar" value="0" max='+maxPlayerTime+' id="player-progress-bar"></progress> <p class="progress-indicator" id="player-progress-indicator"></p>';
         
 
     
     },
     setPreFight: function() {
+        if(music_active == true )
+        {
+            ff7_battle.play();
+            $("#music-toggle")[0].checked = true;
+        }
+        
         let getHeader = document.querySelector(".header");
         let getActions = document.querySelector(".actions");
-        let getArena = document.querySelector(".arena")
-        getHeader.innerHTML = '<p>To the Battlefield!</p>'
+        let getArena = document.querySelector(".arena");
+        getHeader.innerHTML = '<p>To the Battlefield!</p> ';
         //getActions.innerHTML = '<a href="#" role="button" class="btn prefight" onclick="GameManager.setFight()">Looking for Battle</a>';
         getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-block tooltipp" onclick="GameManager.setFight()">Looking for Battle <span class="tooltipptext">Finds a random enemy to fight</span> </button>'; 
+        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-block tooltipp" onclick="GameManager.gauntletFight()">Gauntlet Battle <span class="tooltipptext">Battle multiple enemies in succession</span> </button>';
         getArena.style.visibility = "visible";
     },
 
@@ -54,7 +74,7 @@ let GameManager = {
         let getEnemy = document.querySelector(".enemy");
 
 
-        let chooseRandomEnemy = Math.floor(Math.random()*Math.floor(2));
+        let chooseRandomEnemy = Math.floor(Math.random()*Math.floor(3));
 
         switch (chooseRandomEnemy) {
             case 0:
@@ -62,6 +82,10 @@ let GameManager = {
                 break;
             case 1:
                 enemy = enemy1;
+                break
+            case 2:
+                enemy = enemy2;
+                break
             default:
                 break;
         }
@@ -69,10 +93,9 @@ let GameManager = {
         maxEnemyTime = Math.floor( (2 * (enemy.agility + enemy.speed)) / ((enemy.agility) * (enemy.speed) / 100) );
         console.log(maxEnemyTime);
 
-        getHeader.innerHTML = '<p>Choose your Action!</p>';
+        //Pause Timer
+        //getHeader.innerHTML = '<p>Choose your Action!</p> <button onclick="GameManager.pauseFight()" class="btn btn-primary btn-pause"> Pause </button>';
 
-        // getActions.innerHTML = '<a href="#" class="btn-prefight" onclick="PlayerMoves.calcAttack()">Attack!  </a>';
-        // getActions.innerHTML += '<a href="#" class="btn-prefight-boost" onclick="PlayerMoves.calcBoost()">Boost next Attack!</a>';
 
         getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-attack btn-player" onclick="PlayerMoves.playerAttackOnTimer()">Attack!  </button>';
         getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost tooltipp btn-player" onclick="PlayerMoves.calcBoost()">Boost next Attack! <span class="tooltipptext">Costs 20 Strength <br>Damage Mutliplier </span></button>'; 
@@ -83,16 +106,141 @@ let GameManager = {
         }
 
         getArena.innerHTML = "<p>Choose an action above! Your enemy isn't going to wait!</p>";
-        // if (player.speed > enemy.speed){
-        //     getArena.innerHTML = '<p>Quick Hands! You attack before your enemy.</p>';
-        // }
-        // else{
-        //     getArena.innerHTML = '<p>The enemy is faster and attacks before you.</p>';
-        // }
 
-        getEnemy.innerHTML = '<progress class="local-progress-bar" value="0" max='+maxEnemyTime+' id="enemy-progress-bar"></progress>';
-        //document.getElementById("enemy-progress").innerHTML =  '<div class="progress-bar bg-danger" style="width: 50%;" ></div><br></br>';
-        startEnemyTimer();
-        getEnemy.innerHTML += '<img src="imgs/Placeholder2(1).png" alt="'+ enemy.enemyType+'" class="img-avatar"><div><h3>'+enemy.enemyType+'</h3><p class="health-enemy">Health : '+enemy.health+'</p><p>Mana : '+enemy.mana+'</p><p>Strength : '+enemy.strength+'</p><p>Agility : '+enemy.agility+'</p><p>Speed : '+enemy.speed+'</p></div>';
+        startEnemyTimer(enemy);
+        getEnemy.innerHTML += '<img src="imgs/Placeholder2(1).png" alt="'+ enemy.enemyType+'" class="img-avatar"><div><h3>'+enemy.enemyType+'</h3><p class="health-enemy">Health : '+enemy.health+'</p><p>Mana : '+enemy.mana+'</p><p>Strength : '+enemy.strength+'</p><p>Agility : '+enemy.agility+'</p><p>Speed : '+enemy.speed+'</p> <p class="progress-indicator" id="enemy-progress-indicator"></p><progress class="local-progress-bar" value="0" max='+maxEnemyTime+' id="enemy-progress-bar"></progress> </div>';
+    },
+
+    gauntletFight :function() {
+
+        let getHeader = document.querySelector(".header");
+        let getActions = document.querySelector(".actions");
+        let getArena = document.querySelector(".arena");
+        let getEnemy = document.querySelector(".enemy");
+
+        noOfEnemies = Math.floor(Math.random()*Math.floor(1)) + 2;
+
+        
+
+        for(let i=0;i<noOfEnemies;i++)
+        {
+            let chooseRandomEnemy = Math.floor(Math.random()*Math.floor(3));
+
+            switch (chooseRandomEnemy) {
+                case 0:
+                    enemy = enemy0;
+                    break;
+                case 1:
+                    enemy = enemy1;
+                    break
+                case 2:
+                    enemy = enemy2;
+                    break
+                default:
+                    break;
+            }
+            maxEnemyTime = Math.floor( (2 * (enemy.agility + enemy.speed)) / ((enemy.agility) * (enemy.speed) / 100) );
+            
+            var enemyTimerVar;
+            var enemyTime;
+            let enemyID = i;
+            let enemyDefeat = false;
+            let gaunt_enemy = new Enemies(enemyID,enemy,maxEnemyTime,enemyTimerVar,enemyTime,enemyDefeat);
+            enemies.push(gaunt_enemy);
+        }
+        this.gameOutcomeLoop(enemies);
+
+        getHeader.innerHTML = '<p>Choose your Action!</p> <button onclick="GameManager.pauseFight()" class="btn btn-primary btn-pause"> Pause </button>';
+
+        // getActions.innerHTML = '<a href="#" class="btn-prefight" onclick="PlayerMoves.calcAttack()">Attack!  </a>';
+        // getActions.innerHTML += '<a href="#" class="btn-prefight-boost" onclick="PlayerMoves.calcBoost()">Boost next Attack!</a>';
+
+        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-attack btn-player" onclick="PlayerMoves.playerAttackOnTimerGauntlet(enemies)">Attack!  </button>';
+        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost tooltipp btn-player" onclick="PlayerMoves.calcBoost()">Boost next Attack! <span class="tooltipptext">Costs 20 Strength <br>Damage Mutliplier </span></button>'; 
+
+        if (player.mana > 10)
+        {
+            getActions.innerHTML += '<button type="button" class="btn btn-success btn-lg btn-heal tooltipp btn-player" onclick="PlayerMoves.calcHeal()">Heal Self <span class="tooltipptext" id="mana-tooltip">Costs 40 Mana <br>Healing scales on Mana</span> </button>'; 
+        }
+
+        getArena.innerHTML = "<p>Choose an action above! Your enemy isn't going to wait!</p>";
+        
+        enemies.forEach(function(gaunt_enemy)
+        {
+            getEnemy.innerHTML += '<img src="imgs/Placeholder2(1).png" alt="'+ gaunt_enemy.enemy.enemyType+'" class="img-avatar"><div><h3>'+gaunt_enemy.enemy.enemyType+'</h3><p class="health-enemy" id="health-'+gaunt_enemy.enemyID+'">Health : '+gaunt_enemy.enemy.health+'</p><p>Mana : '+gaunt_enemy.enemy.mana+'</p><p>Strength : '+gaunt_enemy.enemy.strength+'</p><p>Agility : '+gaunt_enemy.enemy.agility+'</p><p>Speed : '+gaunt_enemy.enemy.speed+'</p> <p class="progress-indicator" id="enemy-progress-indicator-'+gaunt_enemy.enemyID+'"></p><progress class="local-progress-bar" value="0" max='+gaunt_enemy.maxEnemyTime+' id="enemy-progress-bar-'+gaunt_enemy.enemyID+'"></progress> </div>';
+            startEnemyTimerGauntlet(gaunt_enemy);
+        });
+    },    
+    gameOutcomeLoop : function(enemies) {
+        let getArena = document.querySelector(".arena");
+        let getActions = document.querySelector(".actions");
+        let getOutcome = document.getElementById("outcome");
+
+
+        let getPlayerHealth = document.querySelector(".health-player");
+        let count = 0;
+        let enemyID;
+        let getEnemyHealth;
+        gameOutcome = setInterval(function() 
+        {
+            //console.log("The count is "+(count++))
+            allEnemiesDead = true;
+            for(let i=0;i<enemies.length;i++){
+                gaunt_enemy = enemies[i];
+                if(gaunt_enemy.enemy.health <= 0)
+                {
+                    allEnemiesDead = true;
+                    enemyID = gaunt_enemy.enemyID
+                    
+                }
+                else{
+                    allEnemiesDead = false;
+                    break;
+                }
+            };
+            
+            if (allEnemiesDead == true){
+                //WIN CONDI
+                //console.log("all enemies are Dead")
+                getEnemyHealth = document.getElementById("health-"+enemyID);
+                getOutcome.classList.add("reveal");
+                getOutcome.innerHTML = "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
+                getPlayerHealth.innerHTML = 'Health : ' + player.health;
+                getEnemyHealth.innerHTML = 'Health : 0';
+                getActions.style.visibility = "hidden";
+                clearInterval(enemyTimerVar);
+                clearInterval(gameOutcome);
+                ff7_battle.pause();
+                ff7_victory.play();
+                //End both timers
+            }
+
+        },1000);
+    },
+    pauseFight : function() {
+        if( pauseCondition == true)
+        {
+            clearInterval(enemyTimerVar);
+            clearInterval(playerTimerVar);
+            pauseCondition = false;
+        }
+        else if (pauseCondition == false)
+        {
+            PlayerMoves.resumePlayerTimer();
+            pauseCondition = true;
+        }
+
+    },
+
+    toggleMusic : function() {
+        if($("#music-toggle")[0].checked){
+            music_active = false;
+            ff7_battle.pause();
+        }
+        else
+        {
+            music_active = true;
+            ff7_battle.play()
+        }
     }
 }

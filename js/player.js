@@ -8,6 +8,11 @@ var playerMaxMana = 0;
 
 var playerMaxHealth = 0;
 
+let pickedEnemy = false;
+
+var currentTime;
+
+let playerTimerVar;
 
 function Player(classType, health , mana, strength, agility, speed) {
     this.classType=classType;
@@ -18,16 +23,105 @@ function Player(classType, health , mana, strength, agility, speed) {
     this.speed = speed;
 }
 
-let warrior = new Player("Warrior", 300, 0, 200, 80, 80);
+let warrior = new Player("Warrior", 400, 0, 200, 80, 80);
 
-let rogue = new Player("Rogue", 200, 0, 60, 120, 140);
+let rogue = new Player("Rogue", 100, 0, 60, 120, 140);
 
-let mage = new Player("Mage", 150, 200, 50, 100, 100);
+let mage = new Player("Mage", 250, 200, 50, 100, 100);
 
-let hunter = new Player("Hunter", 220, 40, 80, 120, 120);
+let hunter = new Player("Hunter", 320, 40, 80, 120, 120);
 
 
 let PlayerMoves = {
+    checkAllEnemiesDead : function(enemies) {
+
+    },
+    playerAttack : function(){
+        let calcBaseDamage;
+            // DMG stats here
+            if(player.mana>player.agility){
+                calcBaseDamage = Math.floor((player.strength+1) * (player.mana+1) * (player.agility+1) /40000);
+                console.log(calcBaseDamage);
+            }
+            else {
+                calcBaseDamage = Math.floor(player.strength * player.agility /1000);
+            }
+
+            calcBaseDamage = Math.floor(calcBaseDamage * boostMultiplier);
+
+            let offsetDamage = Math.floor(Math.random() * Math.floor(10));
+            let calcOutputDamage = calcBaseDamage + offsetDamage;
+
+            let numberOfHits = (Math.floor(Math.random() * Math.floor(player.agility / 10) / 2 )) + 1;
+
+            let attackValues = [calcOutputDamage,numberOfHits];
+
+            boostMultiplier = 1;
+
+            return attackValues;
+    },
+    buildTargetMenu : function(enemies) {
+        getTargetMenu = document.querySelector(".targetmenu");
+        getTargetMenu.style.visibility = "visible";
+        getTargetMenu.classList.add("reveal");
+        getTargetMenu.innerHTML += '<h3 id="target-text">Choose a target</h3>';
+        enemies.forEach( function(gaunt_enemy){
+            if(gaunt_enemy.enemyDefeat == false)
+            {
+            getTargetMenu.innerHTML += '<a id="target-name" href="javascript:;" onclick="PlayerMoves.pickEnemy('+gaunt_enemy.enemyID+')"><p id="'+gaunt_enemy.enemyID+'">'+gaunt_enemy.enemyID+'. '+gaunt_enemy.enemy.enemyType+'</p></a>';
+            }
+        })
+    },
+    pickEnemy : function(enemyID){
+        let getTargetMenu = document.querySelector(".targetmenu");
+        let getArena = document.querySelector(".arena");
+        let getActions = document.querySelector(".actions");
+        let getPlayerHealth = document.querySelector(".health-player");
+        let getEnemyHealth = document.getElementById("health-"+enemyID);
+
+        let playerAttackValues = this.playerAttack();
+        let totalDamage = playerAttackValues[0] * playerAttackValues[1];
+
+        let msg = "Nice! ";
+        let enemy;
+        if(totalDamage>70)
+        {
+            msg="<b>Critical Attack! </b>";
+        }
+        // <->
+        //enemy = gaunt_enemy.enemy;
+        enemies.forEach(function(gaunt_enemy){
+            if(gaunt_enemy.enemyID == enemyID)
+            {   
+                enemy = gaunt_enemy.enemy;
+            }
+        })
+        enemy.health = enemy.health - totalDamage;
+        getArena.innerHTML += "<p class='arena-player'>"+msg + totalDamage+" Damage total dealt in "+playerAttackValues[1]+" attack(s) to "+enemy.enemyType+".</p>";
+
+        if(enemy.health <= 0)
+        {
+            getPlayerHealth.innerHTML = 'Health : ' + player.health;
+            getEnemyHealth.innerHTML = 'Health : 0';
+            enemies.forEach(function(gaunt_enemy){
+                if(gaunt_enemy.enemyID == enemyID)
+                {   
+                    gaunt_enemy.enemyDefeat = true;
+                    getArena.innerHTML += '<p class="arena-enemy">'+gaunt_enemy.enemy.enemyType+' has been defeated!</p>';
+                }
+            })
+        }
+        else
+        {
+            getEnemyHealth.innerHTML = 'Health : ' + enemy.health;
+        }
+
+        getTargetMenu.innerHTML = "<p></p>";
+        getTargetMenu.style.visibility = "hidden";
+        getTargetMenu.classList.remove("reveal");
+
+        this.startPlayerTimer();
+    },
     
     calcAttack : function(){
         let getPlayerSpeed = player.speed;
@@ -189,12 +283,16 @@ let PlayerMoves = {
         }
     },
 
-    playerAttackOnTimer : function() {
-        let getPlayerSpeed = player.speed;
-        let getEnemySpeed = enemy.speed;
+    playerAttackOnTimer : function(enemies) {
 
         let getArena = document.querySelector(".arena");
         let getActions = document.querySelector(".actions");
+        let getOutcome = document.getElementById("outcome");
+
+
+        let getPlayerHealth = document.querySelector(".health-player");
+    
+        let getEnemyHealth;
 
         let playerAttack = function() {
             let calcBaseDamage;
@@ -220,8 +318,6 @@ let PlayerMoves = {
 
             return attackValues;
         }
-        let getPlayerHealth = document.querySelector(".health-player");
-        let getEnemyHealth = document.querySelector(".health-enemy");
 
         let playerAttackValues = playerAttack();
         let totalDamage = playerAttackValues[0] * playerAttackValues[1];
@@ -236,23 +332,70 @@ let PlayerMoves = {
 
 
         getArena.innerHTML += "<p class='arena-player'>"+msg + totalDamage+" Damage total dealt in "+playerAttackValues[1]+" attack(s).</p>";
-
-        if (enemy.health <=0){
-
-
+        
+        if (enemy.health <= 0){
             //WIN CONDI
-            getArena.innerHTML += "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
+            getEnemyHealth = document.querySelector(".health-enemy");
+            getOutcome.innerHTML = "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
             getPlayerHealth.innerHTML = 'Health : ' + player.health;
             getEnemyHealth.innerHTML = 'Health : 0';
             getActions.style.visibility = "hidden";
-
+            ff7_battle.pause();
+            ff7_victory.play();
             //End both timers
         }
-        else {
-            getEnemyHealth.innerHTML = 'Health : ' + enemy.health;
+        else
+        {
+            getEnemyHealth = 'Health : '+enemy.health;
         }
+        this.scrollIntoView(false);
 
+        //Starts timer
         this.startPlayerTimer();
+    },
+
+    playerAttackOnTimerGauntlet : function(enemies) {
+
+        let getArena = document.querySelector(".arena");
+        let getActions = document.querySelector(".actions");
+        let getOutcome = document.getElementById("outcome");
+
+
+        let getPlayerHealth = document.querySelector(".health-player");
+        
+        let enemyID;
+        let getEnemyHealth;
+
+        this.buildTargetMenu(enemies);
+
+        allEnemiesDead = true;
+        for(let i=0;i<enemies.length;i++){
+            gaunt_enemy = enemies[i];
+            if(gaunt_enemy.enemy.health <= 0)
+            {
+                allEnemiesDead = true;
+                enemyID = gaunt_enemy.enemyID
+                
+            }
+            else{
+                allEnemiesDead = false;
+                break;
+            }
+        };
+        
+
+        if (allEnemiesDead == true){
+            //WIN CONDI
+            getEnemyHealth = document.getElementById("health-"+enemyID);
+            getOutcome.innerHTML = "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
+            getPlayerHealth.innerHTML = 'Health : ' + player.health;
+            getEnemyHealth.innerHTML = 'Health : 0';
+            getActions.style.visibility = "hidden";
+            clearInterval(enemyTimerVar);
+            return ;
+            //End both timers
+        }
+        
     },
 
     startPlayerTimer : function() {
@@ -263,8 +406,10 @@ let PlayerMoves = {
                     playerButtons[i].disabled = true;
                 }
         var playerTime = maxPlayerTime;
-        var playerTimerVar = setInterval(function progressPlayerTimer() {
-            document.getElementById("player-progress-bar").value = maxPlayerTime - --playerTime;
+        playerTimerVar = setInterval(function progressPlayerTimer() {
+            currentTime = maxPlayerTime - --playerTime;
+            document.getElementById("player-progress-bar").value = currentTime;
+            document.getElementById("player-progress-indicator").innerHTML = playerTime;
             if(playerTime <=0 )
             {
                 //Buttons enabled
@@ -279,6 +424,35 @@ let PlayerMoves = {
                 document.getElementById("player-progress-bar").value = 0;
             }
 
+        },1000)
+    },
+
+    resumePlayerTimer : function() {
+        var playerButtons = document.querySelectorAll(".btn-player");
+        for (var i=0;i<playerButtons.length;i++)
+                {
+                    playerButtons[i].disabled = true;
+                }
+
+        var playerTime_resume = currentTime;
+        playerTimerVar = setInterval(function progressPlayerTimer() {
+            currentTime = maxPlayerTime - --playerTime_resume;
+            document.getElementById("player-progress-bar").value = currentTime;
+            document.getElementById("player-progress-indicator").innerHTML = playerTime_resume;
+            if(playerTime_resume <=0 )
+            {
+                //Buttons enabled
+            
+                for (var i=0;i<playerButtons.length;i++)
+                {
+                    playerButtons[i].disabled = false;
+                }
+                //On player click disables and starts timer
+                clearInterval(playerTimerVar);
+                playerTime_resume = maxPlayerTime;
+                document.getElementById("player-progress-bar").value = 0;
+            }
+            playerTime_resume = maxPlayerTime;
         },1000)
     },
 

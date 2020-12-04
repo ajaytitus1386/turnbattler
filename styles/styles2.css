@@ -1,0 +1,377 @@
+*:focus {
+    outline : 0 !important
+}
+
+.tooltipp {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltipp .tooltipptext {
+    visibility: hidden;
+    width: auto;
+    background-color: #2D2D2A;
+    color: #fff;
+    text-align: center;
+    padding : 5px;
+    border-radius: 6px;
+    position:absolute;
+    z-index: 1;
+    top: 100%;
+    left: 35%;
+    margin-left: -50px; /*half of width */
+}
+
+.tooltipp:hover .tooltipptext {
+    visibility: visible;
+}
+
+.tooltipp .tooltipptext::after {
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    left:50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #2D2D2A transparent;
+}
+
+.btn-pause {
+    justify-content: right;
+}
+
+.g-banner {
+    background-color: #1b1b1e;
+    position: initial;
+    padding: 20px;
+}
+
+
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+img {
+    width: 160px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+body {
+    background-color: #2D2D2A;
+}
+
+.header {
+    background-color: #1B1B1B;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: left;
+    
+}
+
+.header, .prelude {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 24px;
+    color: #3F5E5A;
+    padding: 4px;
+}
+
+.prelude {
+    font-family: 'Fondamento';
+}
+
+.header p {
+    font-family: 'Fondamento';
+    font-size: 32px;
+    padding: 4px;
+    color: #f8b700;
+}
+
+.header h2 {
+    font-family: 'Fondamento';
+    font-size: 32px;
+    padding: 4px;
+    color: #f8b700;
+}
+
+.header h3 {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #3F5E5A;
+    font-size: 15px;
+}
+
+
+.interface {
+    padding: 0px ;
+    width : 100%;
+    display: grid;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: #2D2D2A;
+}
+
+.interface a {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    padding: 10px;
+}
+
+.interface img {
+    width: 160px;
+    height: 160px;
+    /* padding: 10px; */
+}
+
+.img-avatar {
+    width: 220px !important;
+    height: 220px !important;
+}
+
+
+.interface div {
+    width: 220px;
+    padding: 0 10px 0 20px; 
+    background-color: #211510; 
+}
+
+.interface a:hover div {
+    color: #20F08F;
+    text-decoration: none;
+}
+
+.interface h3 {
+    font-family: 'Fondamento', cursive;
+    font-family: 24px;
+    color: #f8b700;
+    padding: 10px 0 4px;
+}
+
+.interface p {
+    font-family: 'Fondamento', cursive;
+    font-size: 16px;
+    color: #FBFAF8;
+    line-height: 20px;
+}
+
+.interface p:hover {
+    color:#20FC8F;
+}
+
+
+.btn-prefight {
+    width: 100%;
+}
+
+.btn-prefight-boost {
+    width: 100%;
+}
+
+.local-progress-bar {
+    padding: 10px;
+    display: inline-block;
+    justify-content: center;
+}
+
+.progress-indicator {
+    display: inline-block;
+    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+    text-align: center;
+    padding: 5px;
+}
+
+#player-progress-bar {
+    margin-left: 10px;
+}
+
+#enemy-progress-bar {
+    margin-right: 10px;
+}
+
+.actions {
+    background-color:#1B1B1E;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.actions a {
+    width: fit-content;
+    padding: 10px 10px;
+    text-align: center;
+    font-size: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #1b1b1b;
+}
+
+.actions a:nth-of-type(1) {
+    background-color: #e64747;
+}
+
+.actions a:nth-of-type(2) {
+    background-color: #20FC8F;
+}
+  
+.actions a:nth-of-type(3) {
+    background-color: #6de647;
+}
+
+.actions a:hover {
+    opacity: 0.8;
+}
+
+.arena , .targetmenu, .outcome {
+    width: 100%;
+    min-height: 0px;
+    height: 180px;
+    font-size: 15px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #FBFAF8;
+    text-align: center;
+    overflow: auto;
+    background-color: #023047;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 35vh;
+    visibility: hidden;
+    padding: 10px;
+    
+}
+
+.outcome {
+    height: 0px;
+    max-height: 80px;
+}
+
+.targetmenu {
+    min-height: 0px;
+    height: 0px;
+    background-color: #074868;
+    font-family: 'Fondamento';
+    color: #f8b700;
+    display: grid;
+}
+
+.reveal {
+    height: 120px;
+    visibility: visible;
+}
+
+#target-name:hover {
+    color: #f8b700;
+}
+#target-text {
+    color: #f8b700;
+    font-family: 'Fondamento';
+    font-size: 16px;
+    padding: 5px;
+}
+.arena-player {
+    color: #4fb92e
+}
+
+.arena-enemy {
+    color: #e63946
+}
+
+#drain-health {
+    color: blueviolet
+}
+
+.arena-player-win {
+    color: #fca311;
+    font-family: 'Fondamento';
+    font-size: 20px;
+}
+
+.arena-enemy-defeat {
+    color: #e36414;
+    font-family: 'Fondamento';
+    font-size: 20px;
+}
+
+.instructions {
+    width : 50%;
+    margin-left: 360px;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fondamento';
+    font-size: 15px;
+    color: #FBFAF8;
+    justify-items: center;
+}
+
+.enemy {
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: #1b1b1b;
+}
+
+.enemy a {
+    display: flex;
+    flex-wrap: nowrap;
+}
+  
+.enemy img {
+    width: 120px;
+    height: 120px;
+}
+  
+.enemy div {
+    width: 220px;
+    padding: 0 10px 0 20px;
+    background-color: #211510;
+}
+  
+.enemy a:hover div {
+    background-color: #3c1d3d;
+}
+  
+.enemy h3 {
+    font-family: 'Fondamento', cursive;
+    font-size: 24px;
+    color: #f8b700;
+    padding: 12px 0 4px;
+}
+  
+.enemy p {
+    font-family: 'Fondamento', cursive;
+    font-size: 16px;
+    color: #d5c8af;
+    line-height: 20px;
+}
+  
+
+
+.footer {
+    background-color: #1B1B1B;
+    text-align: center;
+    font-family: 'Fondamento', cursive;
+    color: #FBFAF8;
+    padding :30px;
+    font-size: 15px;
+}
+
+.plain {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}

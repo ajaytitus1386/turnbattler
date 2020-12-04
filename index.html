@@ -38,7 +38,8 @@
     <script src="js/player.js"></script>
     <script src="js/enemy.js"></script>
     <script src="main.js"></script>
-    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="styles/styles2.css">
+    <link rel="stylesheet" href="styles/toggle_switch.css">
 
     <style>
         .g-signout {
@@ -52,7 +53,7 @@
 
     <div class="header">
         <p class="prelude">
-            Hey! I guess this is technically a game!
+            Welcome to the Simplest Turn Based Battler Ever!
         </p>
         <h2>Go ahead and choose!</h2>
         <h3>Refresh at any time to return to this page</h3>
@@ -65,6 +66,11 @@
             <button onclick="signOut()" class="btn btn-danger"> Sign Out </button>
         </div>
     </div>
+    <label class="switch tooltipp">
+        <input type="checkbox" id="music-toggle" checked>
+        <span onclick="GameManager.toggleMusic()" class="slider round"></span>
+        <span class="tooltipptext">Toggles Battle Music</span>
+    </label>
     
 
 
@@ -106,19 +112,27 @@
     <div class="actions">
         
     </div>
-
+    <div class="targetmenu">
+        
+    </div>
     <div class="arena">
         <div class="instructions">
             <h2>Instructions</h2>
             <p>This is a turn based battler that uses a turn timer displayed near your character. Your enemy will attack repeatedly on each turn. On your turn, you choose between your available actions. You and the enemy have separate timers based on your stats.<br>This section will show details during the fight.<br> Remember not to spam the action buttons as each turn takes a certain time to complete!</p>
         </div>
+
+    </div>
+    <div class="outcome" id="outcome">
+
     </div>
 
     <div class="enemy">
     </div>
 
     <div class="footer">
-        Thanks for checking out the site! This was initially inspired by a <a href="https://www.youtube.com/watch?v=M6sA8fvMCuA&list=PL0eyrZgxdwhxNGMWROnaY35NLyEjTqcgB&index=23&t=4s" target="_blank">video</a> made by Dani Krossing.
+        <p>Thanks for checking out the site! This was initially inspired by a <a href="https://www.youtube.com/watch?v=M6sA8fvMCuA&list=PL0eyrZgxdwhxNGMWROnaY35NLyEjTqcgB&index=23&t=4s" target="_blank">video</a> made by Dani Krossing.</p>
+        <p>Music from Final Fantasy VII. All rights to original creators</p>
+        <p class="plain">Contact: ajaytitus1386@gmail.com</p>
     </div>
 </body>
 </html>
