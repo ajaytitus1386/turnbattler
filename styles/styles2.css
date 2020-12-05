@@ -262,14 +262,17 @@ body {
 .targetmenu {
     min-height: 0px;
     height: 0px;
+    max-height: 0px;
     background-color: #074868;
     font-family: 'Fondamento';
     color: #f8b700;
     display: grid;
+    transition: max-height 0.8s ease-out;
 }
 
 .reveal {
-    height: 120px;
+    max-height: 500px;
+    height: auto ;
     visibility: visible;
 }
 
@@ -279,8 +282,8 @@ body {
 #target-text {
     color: #f8b700;
     font-family: 'Fondamento';
-    font-size: 16px;
-    padding: 5px;
+    font-size: 14px;
+    padding: 0.1px;
 }
 .arena-player {
     color: #4fb92e

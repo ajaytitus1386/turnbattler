@@ -4,9 +4,6 @@ let boostMultiplier = 1;
 
 var maxPlayerTime = 10;
 
-var playerMaxMana = 0;
-
-var playerMaxHealth = 0;
 
 let pickedEnemy = false;
 
@@ -21,21 +18,21 @@ function Player(classType, health , mana, strength, agility, speed) {
     this.strength = strength;
     this.agility = agility;
     this.speed = speed;
+    this.maxPlayerHealth = health;
+    this.maxPlayerMana = mana;
 }
 
-let warrior = new Player("Warrior", 400, 0, 200, 80, 80);
+let warrior = new Player("Warrior", 200, 0, 200, 80, 80);
 
 let rogue = new Player("Rogue", 100, 0, 60, 120, 140);
 
-let mage = new Player("Mage", 250, 200, 50, 100, 100);
+let mage = new Player("Mage", 150, 200, 50, 100, 100);
 
-let hunter = new Player("Hunter", 320, 40, 80, 120, 120);
+let hunter = new Player("Hunter", 220, 90, 80, 120, 120);
 
 
 let PlayerMoves = {
-    checkAllEnemiesDead : function(enemies) {
 
-    },
     playerAttack : function(){
         let calcBaseDamage;
             // DMG stats here
@@ -340,7 +337,7 @@ let PlayerMoves = {
             getPlayerHealth.innerHTML = 'Health : ' + player.health;
             getEnemyHealth.innerHTML = 'Health : 0';
             getActions.style.visibility = "hidden";
-            ff7_battle.pause();
+            battle_music.pause();
             ff7_victory.play();
             //End both timers
         }
@@ -365,13 +362,17 @@ let PlayerMoves = {
         
         let enemyID;
         let getEnemyHealth;
-
+        var playerButtons = document.querySelectorAll(".btn-player");
+        for (var i=0;i<playerButtons.length;i++)
+                {
+                    playerButtons[i].disabled = true;
+                }
         this.buildTargetMenu(enemies);
 
-        allEnemiesDead = true;
+        allEnemiesDead = false;
         for(let i=0;i<enemies.length;i++){
             gaunt_enemy = enemies[i];
-            if(gaunt_enemy.enemy.health <= 0)
+            if(gaunt_enemy.enemyDefeat)
             {
                 allEnemiesDead = true;
                 enemyID = gaunt_enemy.enemyID

@@ -20,6 +20,7 @@ function Enemy(enemyType, health , mana, strength, agility, speed) {
     this.strength = strength;
     this.agility = agility;
     this.speed = speed;
+    this.maxEnemyHealth = health;
 }
 
 var maxEnemyTime = 5;
@@ -34,6 +35,9 @@ let enemyDrainHealth= function(enemy) {
     player.health = player.health - calcBaseDamage;
 
     enemy.health = enemy.health + calcBaseDamage;
+
+    enemy.mana = enemy.mana - 20;
+
     return calcBaseDamage;
 }
 
@@ -71,6 +75,7 @@ function enemyAttackOnTimerGauntlet(enemyID,enemy) {
     let getActions = document.querySelector(".actions");
     let getPlayerHealth = document.querySelector(".health-player");
     let getEnemyHealth = document.getElementById("health-"+enemyID);
+    let getEnemyMana = document.getElementById("mana-"+enemyID);
 
     if(enemy.enemyType == "Wraith")
     {
@@ -80,7 +85,8 @@ function enemyAttackOnTimerGauntlet(enemyID,enemy) {
             drainDMG = enemyDrainHealth(enemy);
 
             getArena.innerHTML += '<p class="arena-enemy" id="drain-health">The '+enemy.enemyType+' has drained '+drainDMG+'HP from '+player.classType+'</p>';
-            getEnemyHealth = 'Health : ' + enemy.health;
+            getEnemyHealth.innerHTML = 'Health : ' + enemy.health;
+            getEnemyMana.innerHTML = 'Mana : ' + enemy.mana;
         }
         else
         {
@@ -101,7 +107,7 @@ function enemyAttackOnTimerGauntlet(enemyID,enemy) {
         getEnemyHealth.innerHTML = 'Health : ' + enemy.health;
         getPlayerHealth.innerHTML = 'Health : 0';
         getActions.style.visibility = "hidden";
-        ff7_battle.pause();
+        battle_music.pause();
         ff7_defeat.play();
 
     }
@@ -114,6 +120,7 @@ function enemyAttackOnTimer(enemy) {
     
 
     let getArena = document.querySelector(".arena");
+    let getOutcome = document.getElementById("outcome");
     let getActions = document.querySelector(".actions");
     let getPlayerHealth = document.querySelector(".health-player");
     let getEnemyHealth = document.querySelector(".health-enemy");
@@ -142,12 +149,12 @@ function enemyAttackOnTimer(enemy) {
 
     if (player.health <=0){
 
-        getArena.innerHTML+= "<p class='arena-enemy-defeat'>Defeat! You were beaten by your enemy!</p>";
+        getOutcome.innerHTML = "<p class='arena-enemy-defeat'>Defeat! You were beaten by your enemy!</p>";
 
         getEnemyHealth.innerHTML = 'Health : ' + enemy.health;
         getPlayerHealth.innerHTML = 'Health : 0';
         getActions.style.visibility = "hidden";
-        ff7_battle.pause();
+        battle_music.pause();
         ff7_defeat.play();
 
     }
