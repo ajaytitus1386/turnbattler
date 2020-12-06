@@ -79,7 +79,7 @@ function enemyAttackOnTimerGauntlet(enemyID,enemy) {
 
     if(enemy.enemyType == "Wraith")
     {
-        if(enemy.mana > 20 && player.health > 70 && enemyTurnAlt == true)
+        if(enemy.health < (enemy.maxEnemyHealth + 20) && enemy.mana > 20 && player.health > 70 && enemyTurnAlt == true)
         {
             enemyTurnAlt = false
             drainDMG = enemyDrainHealth(enemy);
