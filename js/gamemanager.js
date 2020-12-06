@@ -64,8 +64,8 @@ let GameManager = {
         let getArena = document.querySelector(".arena");
         getHeader.innerHTML = '<p>To the Battlefield!</p> ';
         //getActions.innerHTML = '<a href="#" role="button" class="btn prefight" onclick="GameManager.setFight()">Looking for Battle</a>';
-        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-block tooltipp" onclick="GameManager.setFight()">Looking for Battle <span class="tooltipptext">Finds a random enemy to fight</span> </button>'; 
-        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-block tooltipp" onclick="GameManager.gauntletFight()">Gauntlet Battle <span class="tooltipptext">Battle multiple enemies in succession</span> </button>';
+        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-block tooltipp" onclick="GameManager.singleFight()">Looking for Battle <span class="tooltipptext">Finds a random enemy to fight</span> </button>'; 
+        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-block tooltipp" onclick="GameManager.gauntletFight()">Gauntlet Battle <span class="tooltipptext">Battle multiple enemies at once</span> </button>';
         getArena.style.visibility = "visible";
     },
 
@@ -111,6 +111,64 @@ let GameManager = {
 
         startEnemyTimer(enemy);
         getEnemy.innerHTML += '<img src="imgs/Placeholder2(1).png" alt="'+ enemy.enemyType+'" class="img-avatar"><div><h3>'+enemy.enemyType+'</h3><p class="health-enemy">Health : '+enemy.health+'</p><p class="mana-enemy">Mana : '+enemy.mana+'</p><p>Strength : '+enemy.strength+'</p><p>Agility : '+enemy.agility+'</p><p>Speed : '+enemy.speed+'</p> <p class="progress-indicator" id="enemy-progress-indicator"></p><progress class="local-progress-bar" value="0" max='+maxEnemyTime+' id="enemy-progress-bar"></progress> </div>';
+    },
+    singleFight : function() {
+        let getHeader = document.querySelector(".header");
+        let getActions = document.querySelector(".actions");
+        let getArena = document.querySelector(".arena");
+        let getEnemy = document.querySelector(".enemy");
+        let getPlayerHealth = document.querySelector(".health-player");
+
+        noOfEnemies = 1;
+
+        player.health = Math.floor(player.health * noOfEnemies)
+        getPlayerHealth.innerHTML = 'Health : '+player.health;
+
+        for(let i=0;i<noOfEnemies;i++)
+        {
+            let chooseRandomEnemy = Math.floor(Math.random()*Math.floor(3));
+
+            switch (chooseRandomEnemy) {
+                case 0:
+                    enemy = enemy0;
+                    break;
+                case 1:
+                    enemy = enemy1;
+                    break
+                case 2:
+                    enemy = enemy2;
+                    break
+                default:
+                    break;
+            }
+            maxEnemyTime = Math.floor( (2 * (enemy.agility + enemy.speed)) / ((enemy.agility) * (enemy.speed) / 100) );
+            
+            var enemyTimerVar;
+            var enemyTime;
+            let enemyID = i;
+            let enemyDefeat = false;
+            let gaunt_enemy = new Enemies(enemyID,enemy,maxEnemyTime,enemyTimerVar,enemyTime,enemyDefeat);
+            enemies.push(gaunt_enemy);
+        }
+        this.gameOutcomeLoop(enemies);
+
+        getHeader.innerHTML = '<p>Choose your Action!</p> <button onclick="GameManager.pauseFight()" class="btn btn-primary btn-pause"> Pause </button>';
+
+        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-attack btn-player" onclick="PlayerMoves.playerAttackOnTimerGauntlet(enemies)">Attack!  </button>';
+        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost tooltipp btn-player" onclick="PlayerMoves.calcBoost()">Boost next Attack! <span class="tooltipptext">Costs 20 Strength <br>Damage Mutliplier </span></button>'; 
+
+        if (player.mana > 10)
+        {
+            getActions.innerHTML += '<button type="button" class="btn btn-success btn-lg btn-heal tooltipp btn-player" onclick="PlayerMoves.calcHeal()">Heal Self <span class="tooltipptext" id="mana-tooltip">Costs 40 Mana <br>Healing scales on Mana</span> </button>'; 
+        }
+
+        getArena.innerHTML = "<p>Choose an action above! Your enemy isn't going to wait!</p>";
+        
+        enemies.forEach(function(gaunt_enemy)
+        {
+            getEnemy.innerHTML += '<img src="imgs/Placeholder2(1).png" alt="'+ gaunt_enemy.enemy.enemyType+'" class="img-avatar"><div><h3>'+gaunt_enemy.enemy.enemyType+'</h3><p class="health-enemy" id="health-'+gaunt_enemy.enemyID+'">Health : '+gaunt_enemy.enemy.health+'</p><p id="mana-'+gaunt_enemy.enemyID+'">Mana : '+gaunt_enemy.enemy.mana+'</p><p>Strength : '+gaunt_enemy.enemy.strength+'</p><p>Agility : '+gaunt_enemy.enemy.agility+'</p><p>Speed : '+gaunt_enemy.enemy.speed+'</p> <p class="progress-indicator" id="enemy-progress-indicator-'+gaunt_enemy.enemyID+'"></p><progress class="local-progress-bar" value="0" max='+gaunt_enemy.maxEnemyTime+' id="enemy-progress-bar-'+gaunt_enemy.enemyID+'"></progress> </div>';
+            startEnemyTimerGauntlet(gaunt_enemy);
+        });
     },
 
     gauntletFight :function() {
