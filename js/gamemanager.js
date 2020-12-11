@@ -181,7 +181,7 @@ let GameManager = {
 
         noOfEnemies = Math.floor(Math.random()*Math.floor(2)) + 2;
 
-        player.health = Math.floor(player.health * noOfEnemies) * 4;
+        player.health = Math.floor(player.health * noOfEnemies);
         getPlayerHealth.innerHTML = 'Health : '+player.health;
 
         for(let i=0;i<noOfEnemies;i++)
