@@ -29,6 +29,8 @@ let enemy0 = new Enemy("Goblin", 100, 0 ,50 ,100, 100);
 let enemy1 = new Enemy("Troll", 200, 0, 150 , 60 ,60);
 let enemy2 = new Enemy("Wraith",150 , 140, 60, 80,90);
 
+var EnemyPool = [0,1,2];
+
 let enemyDrainHealth= function(enemy) {
     calcBaseDamage = Math.floor(enemy.strength * enemy.mana / 600) ;
 
@@ -101,8 +103,9 @@ function enemyAttackOnTimerGauntlet(enemyID,enemy) {
     }
 
     if (player.health <=0){
-
-        getArena.innerHTML+= "<p class='arena-enemy-defeat'>Defeat! You were beaten by your enemy!</p>";
+        let getOutcome = document.getElementById("outcome");
+        getOutcome.classList.add("reveal")
+        getOutcome.innerHTML = "<p class='arena-enemy-defeat'>Defeat! You were beaten by your enemy!</p>";
 
         getEnemyHealth.innerHTML = 'Health : ' + enemy.health;
         getPlayerHealth.innerHTML = 'Health : 0';

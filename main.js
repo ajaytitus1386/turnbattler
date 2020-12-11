@@ -18,7 +18,9 @@ function onSignIn(googleUser) {
     $(".g-signin2").css("display","none");
     $(".g-signout").css("display","block");
     $("#email").text(profile.getEmail());
-    playerEmail = text(profile.getEmail());
+    playerEmail = (profile.getEmail());
+    reqPHP(playerEmail);
+
 }
 
 
@@ -35,15 +37,15 @@ function signOut() {
     playerEmail = "unknown";
 }
 
-function reqPHP() {
+function reqPHP(playerEmail) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-          document.getElementById("txtHint").innerHTML = this.responseText;
+          //document.getElementById("txtHint").innerHTML = this.responseText;
         }
       };
     
-    xmlhttp.open("GET","inventory.php?q="+"email_id",true);
+    xmlhttp.open("GET","inventory.php?q="+playerEmail,true);
     xmlhttp.send();
 }
 

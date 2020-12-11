@@ -87,12 +87,19 @@ let PlayerMoves = {
         }
         // <->
         //enemy = gaunt_enemy.enemy;
-        enemies.forEach(function(gaunt_enemy){
+        for(let i=0;i<enemies.length;i++){
+            gaunt_enemy = enemies[i];
             if(gaunt_enemy.enemyID == enemyID)
-            {   
+            {
                 enemy = gaunt_enemy.enemy;
             }
-        })
+        }
+        // enemies.forEach(function(gaunt_enemy){
+        //     if(gaunt_enemy.enemyID == enemyID)
+        //     {   
+        //         enemy = gaunt_enemy.enemy;
+        //     }
+        // }
         enemy.health = enemy.health - totalDamage;
         getArena.innerHTML += "<p class='arena-player'>"+msg + totalDamage+" Damage total dealt in "+playerAttackValues[1]+" attack(s) to "+enemy.enemyType+".</p>";
 
@@ -132,7 +139,6 @@ let PlayerMoves = {
             // DMG stats here
             if(player.mana>player.agility){
                 calcBaseDamage = Math.floor((player.strength+1) * (player.mana+1) * (player.agility+1) /40000);
-                console.log(calcBaseDamage);
             }
             else {
                 calcBaseDamage = Math.floor(player.strength * player.agility /1000);
@@ -296,7 +302,6 @@ let PlayerMoves = {
             // DMG stats here
             if(player.mana>player.agility){
                 calcBaseDamage = Math.floor((player.strength+1) * (player.mana+1) * (player.agility+1) /40000);
-                console.log(calcBaseDamage);
             }
             else {
                 calcBaseDamage = Math.floor(player.strength * player.agility /1000);
@@ -370,22 +375,23 @@ let PlayerMoves = {
         this.buildTargetMenu(enemies);
 
         allEnemiesDead = false;
+        noOfDead = 0;
         for(let i=0;i<enemies.length;i++){
             gaunt_enemy = enemies[i];
             if(gaunt_enemy.enemyDefeat)
             {
                 allEnemiesDead = true;
                 enemyID = gaunt_enemy.enemyID
-                
+                noOfDead = noOfDead + 1;
             }
             else{
                 allEnemiesDead = false;
-                break;
+                //break;
             }
         };
         
 
-        if (allEnemiesDead == true){
+        if (noOfDead == noOfEnemies){
             //WIN CONDI
             getEnemyHealth = document.getElementById("health-"+enemyID);
             getOutcome.innerHTML = "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";

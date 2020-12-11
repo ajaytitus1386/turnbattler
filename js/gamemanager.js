@@ -93,7 +93,6 @@ let GameManager = {
         }
 
         maxEnemyTime = Math.floor( (2 * (enemy.agility + enemy.speed)) / ((enemy.agility) * (enemy.speed) / 120) );
-        console.log(maxEnemyTime);
 
         //Pause Timer
         //getHeader.innerHTML = '<p>Choose your Action!</p> <button onclick="GameManager.pauseFight()" class="btn btn-primary btn-pause"> Pause </button>';
@@ -178,16 +177,18 @@ let GameManager = {
         let getArena = document.querySelector(".arena");
         let getEnemy = document.querySelector(".enemy");
         let getPlayerHealth = document.querySelector(".health-player");
+        
 
         noOfEnemies = Math.floor(Math.random()*Math.floor(2)) + 2;
 
-        player.health = Math.floor(player.health * noOfEnemies)
+        player.health = Math.floor(player.health * noOfEnemies) * 4;
         getPlayerHealth.innerHTML = 'Health : '+player.health;
 
         for(let i=0;i<noOfEnemies;i++)
         {
-            let chooseRandomEnemy = Math.floor(Math.random()*Math.floor(3));
-
+            
+            let chooseIndex = Math.floor(Math.random()*EnemyPool.length);
+            let chooseRandomEnemy = EnemyPool.splice(chooseIndex,1)[0];
             switch (chooseRandomEnemy) {
                 case 0:
                     enemy = enemy0;
@@ -243,24 +244,24 @@ let GameManager = {
         gameOutcome = setInterval(function() 
         {
             //console.log("The count is "+(count++))
-            allEnemiesDead = true;
+            allEnemiesDead = false;
+            noOfDead = 0;
             for(let i=0;i<enemies.length;i++){
                 gaunt_enemy = enemies[i];
-                if(gaunt_enemy.enemy.health <= 0)
+                if(gaunt_enemy.enemyDefeat)
                 {
                     allEnemiesDead = true;
                     enemyID = gaunt_enemy.enemyID
-                    
+                    noOfDead = noOfDead + 1;
                 }
                 else{
                     allEnemiesDead = false;
-                    break;
+                    //break;
                 }
             };
             
-            if (allEnemiesDead == true){
+            if (noOfEnemies == noOfDead){
                 //WIN CONDI
-
                 getEnemyHealth = document.getElementById("health-"+enemyID);
                 getOutcome.classList.add("reveal");
                 getOutcome.innerHTML = "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
