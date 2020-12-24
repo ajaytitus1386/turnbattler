@@ -18,5 +18,5 @@ app.use(bodyParser.json()); //Helps format the json so it can work between Mongo
 var PORT = 5500;
 
 app.use(express.static(__dirname));
-
+console.log("Express __dir attempt")
 app.listen(PORT);
