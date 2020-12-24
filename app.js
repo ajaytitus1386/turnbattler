@@ -14,7 +14,6 @@ const cors = require('cors');
 app.use(cors()); //Allows one to bypass the CORS policy that stops cross domain access
 app.use(bodyParser.json()); //Helps format the json so it can work between Mongo and JS
 
-const http = require('http');
 const server = http.Server(app);
 
 var PORT = 5500;
