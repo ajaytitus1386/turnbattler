@@ -14,9 +14,14 @@ const cors = require('cors');
 app.use(cors()); //Allows one to bypass the CORS policy that stops cross domain access
 app.use(bodyParser.json()); //Helps format the json so it can work between Mongo and JS
 
+const http = require('http');
+const server = http.Server(app);
 
 var PORT = 5500;
 console.log("Express __dir pre- attempt")
 app.use(express.static('game'));
 console.log("Express __dir attempt")
-app.listen(PORT);
+
+server.listen(PORT, () =>{
+    console.log('Server running');
+})
