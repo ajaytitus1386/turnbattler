@@ -3,7 +3,7 @@ let player
 let boostMultiplier = 1;
 
 var maxPlayerTime = 10;
-
+var maxPlayerUltTime = 10;
 
 let pickedEnemy = false;
 
@@ -32,6 +32,9 @@ let hunter = new Player("Hunter", 220, 90, 80, 120, 120);
 
 
 let PlayerMoves = {
+    playerUlt : function() {
+
+    },
 
     playerAttack : function(){
         let calcBaseDamage;
@@ -102,7 +105,6 @@ let PlayerMoves = {
         // }
         enemy.health = enemy.health - totalDamage;
         getArena.innerHTML += "<p class='arena-player'>"+msg + totalDamage+" Damage total dealt in "+playerAttackValues[1]+" attack(s) to "+enemy.enemyType+".</p>";
-
         if(enemy.health <= 0)
         {
             getPlayerHealth.innerHTML = 'Health : ' + player.health;
@@ -414,6 +416,11 @@ let PlayerMoves = {
                 }
         var playerTime = maxPlayerTime;
         playerTimerVar = setInterval(function progressPlayerTimer() {
+            
+            if(isPaused){
+                return;
+            }
+
             currentTime = maxPlayerTime - --playerTime;
             document.getElementById("player-progress-bar").value = currentTime;
             document.getElementById("player-progress-indicator").innerHTML = playerTime;
@@ -434,6 +441,38 @@ let PlayerMoves = {
         },1000)
     },
 
+    startPlayerUltTimer : function() {
+        var playerUltButtons = document.querySelectorAll(".btn-ult");
+        for (var i=0;i<playerUltButtons.length;i++)
+                {
+                    playerUltButtons[i].disabled = true;
+                }
+        var playerUltTime = maxPlayerUltTime;
+        playerUltTimerVar = setInterval(function progressPlayerTimer() {
+            
+            if(isPaused){
+                return;
+            }
+            
+            currentTime = maxPlayerUltTime - --playerUltTime;
+            document.getElementById("ult-progress-bar").value = currentTime;
+            document.getElementById("ult-progress-indicator").innerHTML = playerUltTime;
+            if(playerUltTime <=0 )
+            {
+                //Buttons enabled
+            
+                for (var i=0;i<playerUltButtons.length;i++)
+                {
+                    playerUltButtons[i].disabled = false;
+                }
+                //On player click disables and starts timer
+                clearInterval(playerUltTimerVar);
+                playerUltTime = maxPlayerUltTime;
+                document.getElementById("ult-progress-bar").value = 0;
+            }
+
+        },1000)
+    },
     resumePlayerTimer : function() {
         var playerButtons = document.querySelectorAll(".btn-player");
         for (var i=0;i<playerButtons.length;i++)

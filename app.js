@@ -17,9 +17,9 @@ app.use(bodyParser.json()); //Helps format the json so it can work between Mongo
 const server = http.Server(app);
 
 var PORT = process.env.PORT || 5500;
-console.log("Express __dir pre- attempt")
+
 app.use(express.static('game'));
-console.log("Express __dir attempt")
+
 
 server.listen(PORT, () =>{
     console.log('Server running');

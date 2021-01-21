@@ -1,17 +1,50 @@
 let playerEmail = "unknown";
+let toggleNavStatus = false;
 
-// document.addEventListener('DOMContentLoaded',function(){
-//     window.addEventListener('scroll',stickyFunction);
+let toggleNav = function(){
+    let getSidebar = document.querySelector(".nav-sidebar")
+    let getSidebarUl = document.querySelector(".nav-sidebar ul")
+    let getSidebarTitle = document.querySelector(".nav-sidebar span")
+    let getSidebarLinks = document.querySelectorAll(".nav-sidebar a")
+    let getSidebarDivs = document.getElementsByClassName("")
+    //Needs to select elements and set opacities to 1
+    if (toggleNavStatus === false) {
+        getSidebarUl.style.visibility="visible";
+        getSidebar.style.width = "272px";
+        getSidebarTitle.style.opacity = "0.5";
+
+        let arrayLength = getSidebarLinks.length;
+
+        for(let i=0;i<arrayLength;i++)
+        {
+            getSidebarLinks[i].style.opacity="1";
+        }
+
+        for(let i=0;i<getSidebarDivs.length;i++)
+        {
+            getSidebarDivs[i].style.opacity = "1";
+        }
+
+        toggleNavStatus = true;
+    }
     
-//     var gBanner = document.getElementById("gBanner");
-//     var sticky = gBanner.offsetTop;
+    else if (toggleNavStatus === true) {
+        getSidebarUl.style.visibility="hidden";
+        getSidebar.style.width = "50px";
+        getSidebarTitle.style.opacity = "0";
 
-//     function stickyFunction() {
-//         if (window.pageYOffset < sticky)
-//         { gBanner.classList.add("sticky"); }
-//         else { gBanner.classList.remove("sticky"); }
-//     }
-// })
+        let arrayLength = getSidebarLinks.length;
+
+        for(let i=0;i<arrayLength;i++)
+        {
+            getSidebarLinks[i].style.opacity="0";
+        }
+
+        toggleNavStatus = false;
+    }
+}
+
+
 
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();

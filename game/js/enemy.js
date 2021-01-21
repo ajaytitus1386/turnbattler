@@ -193,6 +193,10 @@ function startEnemyTimerGauntlet(gaunt_enemy) {
     gaunt_enemy.enemyTime = gaunt_enemy.maxEnemyTime;
 
     gaunt_enemy.enemyTimerVar = setInterval(function progressEnemyTimer() {
+                
+        if(isPaused){
+            return;
+        }
         //--enemyTime;
         document.getElementById("enemy-progress-bar-"+gaunt_enemy.enemyID).value = gaunt_enemy.maxEnemyTime - --gaunt_enemy.enemyTime;
         document.getElementById("enemy-progress-indicator-"+gaunt_enemy.enemyID).innerHTML = gaunt_enemy.enemyTime;
