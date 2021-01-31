@@ -1,4 +1,3 @@
-//let enemy;
 
 let enemyTurnAlt = true;
 
@@ -170,7 +169,6 @@ function startEnemyTimer(enemy) {
     var enemyTime = maxEnemyTime;
 
     enemyTimerVar = setInterval(function progressEnemyTimer() {
-        //--enemyTime;
         document.getElementById("enemy-progress-bar").value = maxEnemyTime - --enemyTime;
         document.getElementById("enemy-progress-indicator").innerHTML = enemyTime;
         if (enemyTime <= 0 )
@@ -197,7 +195,6 @@ function startEnemyTimerGauntlet(gaunt_enemy) {
         if(isPaused){
             return;
         }
-        //--enemyTime;
         document.getElementById("enemy-progress-bar-"+gaunt_enemy.enemyID).value = gaunt_enemy.maxEnemyTime - --gaunt_enemy.enemyTime;
         document.getElementById("enemy-progress-indicator-"+gaunt_enemy.enemyID).innerHTML = gaunt_enemy.enemyTime;
         if (gaunt_enemy.enemyTime <= 0 )

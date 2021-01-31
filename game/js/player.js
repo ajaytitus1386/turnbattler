@@ -11,7 +11,7 @@ var currentTime;
 
 let playerTimerVar;
 
-function Player(classType, health , mana, strength, agility, speed) {
+function Player(classType, health , mana, strength, agility, speed, health, mana) {
     this.classType=classType;
     this.health = health;
     this.mana = mana;
@@ -22,14 +22,18 @@ function Player(classType, health , mana, strength, agility, speed) {
     this.maxPlayerMana = mana;
 }
 
-let warrior = new Player("Warrior", 200, 0, 200, 80, 80);
+let warrior = new Player("Warrior", 200, 0, 200, 80, 80, 200, 0); //Ult damages all enemies //Sweeping Might
 
-let rogue = new Player("Rogue", 100, 0, 60, 120, 140);
+let rogue = new Player("Rogue", 170, 0, 60, 120, 140, 150, 0);  //Ult boosts agility and speed for a period // OverTime
 
-let mage = new Player("Mage", 150, 200, 50, 100, 100);
+let mage = new Player("Mage", 150, 200, 50, 100, 100, 130, 200);  //Regenerate Mana over time period // Arcane Restoration
 
-let hunter = new Player("Hunter", 220, 90, 80, 120, 120);
+let hunter = new Player("Hunter", 220, 90, 80, 120, 120, 220, 90); //Regenerates Health over time //Nature's Blessing
 
+const warriorUlt = "Sweeping Might";
+const rogueUlt = "OverTime";
+const mageUlt = "Arcane Restoration";
+const hunterUlt = "Nature's Blessing";
 
 let PlayerMoves = {
     playerUlt : function() {
@@ -65,14 +69,44 @@ let PlayerMoves = {
         getTargetMenu.style.visibility = "visible";
         getTargetMenu.classList.add("reveal");
         getTargetMenu.innerHTML += '<h3 id="target-text">Choose a target</h3>';
+        var enemiesIDs = [];
         enemies.forEach( function(gaunt_enemy){
             if(gaunt_enemy.enemyDefeat == false)
             {
-            getTargetMenu.innerHTML += '<a id="target-name" href="javascript:;" onclick="PlayerMoves.pickEnemy('+gaunt_enemy.enemyID+')"><p id="'+gaunt_enemy.enemyID+'">'+gaunt_enemy.enemyID+'. '+gaunt_enemy.enemy.enemyType+'</p></a>';
+            getTargetMenu.innerHTML += '<a id="target-'+gaunt_enemy.enemyID+'" class="target-name" href="javascript:;" onclick="PlayerMoves.pickEnemy('+gaunt_enemy.enemyID+')"><p id="'+gaunt_enemy.enemyID+'">'+(gaunt_enemy.enemyID)+'. '+gaunt_enemy.enemy.enemyType+'</p></a>';
+            enemiesIDs.push(gaunt_enemy.enemyID.toString());
+        }
+        })
+        window.addEventListener('keydown',(event)=>{
+            if(enemiesIDs.includes(event.key)){
+                $("#target-"+(event.key)).click();
+            }
+
+        })
+    },
+
+    buildTargetMenuForUlt : function(enemies) {
+        getTargetMenu = document.querySelector(".targetmenu");
+        getTargetMenu.style.visibility = "visible";
+        getTargetMenu.classList.add("reveal");
+        getTargetMenu.innerHTML += '<h3 id="target-text">Choose a target to use ultimate on</h3>';
+        var enemiesIDs = [];
+        enemies.forEach( function(gaunt_enemy){
+            if(gaunt_enemy.enemyDefeat == false)
+            {
+            getTargetMenu.innerHTML += '<a id="target-'+gaunt_enemy.enemyID+'" class="target-name" href="javascript:;" onclick="PlayerMoves.pickEnemy('+gaunt_enemy.enemyID+')"><p id="'+gaunt_enemy.enemyID+'">'+gaunt_enemy.enemyID+'. '+gaunt_enemy.enemy.enemyType+'</p></a>';
+            enemiesIDs.push(gaunt_enemy.enemyID.toString());
+        }
+        })
+        window.addEventListener('keydown',(event)=>{
+            if(enemiesIDs.includes(event.key)){
+                $("#target-"+event.key).click()
             }
         })
     },
-    pickEnemy : function(enemyID){
+
+    pickEnemy : function(enemyID,condition){
+        condition = condition || null;
         let getTargetMenu = document.querySelector(".targetmenu");
         let getArena = document.querySelector(".arena");
         let getActions = document.querySelector(".actions");
@@ -88,8 +122,7 @@ let PlayerMoves = {
         {
             msg="<b>Critical Attack! </b>";
         }
-        // <->
-        //enemy = gaunt_enemy.enemy;
+
         for(let i=0;i<enemies.length;i++){
             gaunt_enemy = enemies[i];
             if(gaunt_enemy.enemyID == enemyID)
@@ -97,12 +130,7 @@ let PlayerMoves = {
                 enemy = gaunt_enemy.enemy;
             }
         }
-        // enemies.forEach(function(gaunt_enemy){
-        //     if(gaunt_enemy.enemyID == enemyID)
-        //     {   
-        //         enemy = gaunt_enemy.enemy;
-        //     }
-        // }
+
         enemy.health = enemy.health - totalDamage;
         getArena.innerHTML += "<p class='arena-player'>"+msg + totalDamage+" Damage total dealt in "+playerAttackValues[1]+" attack(s) to "+enemy.enemyType+".</p>";
         if(enemy.health <= 0)
@@ -126,7 +154,10 @@ let PlayerMoves = {
         getTargetMenu.style.visibility = "hidden";
         getTargetMenu.classList.remove("reveal");
 
-        this.startPlayerTimer();
+        if(condition != "ult"){
+            this.startPlayerTimer();
+        }
+        
     },
     
     calcAttack : function(){
@@ -273,7 +304,7 @@ let PlayerMoves = {
 
                 if (enemy.health <=0){
 
-                    //WIN CONDI
+                    //WIN CONDITION
                     getArena.innerHTML += "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
 
                     getPlayerHealth.innerHTML = 'Health : ' + player.health;
@@ -338,7 +369,7 @@ let PlayerMoves = {
         getArena.innerHTML += "<p class='arena-player'>"+msg + totalDamage+" Damage total dealt in "+playerAttackValues[1]+" attack(s).</p>";
         
         if (enemy.health <= 0){
-            //WIN CONDI
+            //WIN CONDITION
             getEnemyHealth = document.querySelector(".health-enemy");
             getOutcome.innerHTML = "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
             getPlayerHealth.innerHTML = 'Health : ' + player.health;
@@ -388,13 +419,12 @@ let PlayerMoves = {
             }
             else{
                 allEnemiesDead = false;
-                //break;
             }
         };
         
 
         if (noOfDead == noOfEnemies){
-            //WIN CONDI
+            //WIN CONDITION
             getEnemyHealth = document.getElementById("health-"+enemyID);
             getOutcome.innerHTML = "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
             getPlayerHealth.innerHTML = 'Health : ' + player.health;
@@ -405,6 +435,118 @@ let PlayerMoves = {
             //End both timers
         }
         
+    },
+
+    playerUltOnTimerGauntlet : function(enemies){
+        let getArena = document.querySelector(".arena");
+        let getActions = document.querySelector(".actions");
+        let getOutcome = document.getElementById("outcome");
+
+
+        let getPlayerHealth = document.querySelector(".health-player");
+        let getPlayerAgility = document.querySelector(".agility-player");
+        let getPlayerSpeed = document.querySelector(".speed-player");
+        let getPlayerMana = document.querySelector(".mana-player");
+
+        let enemyID;
+        let getEnemyHealth;
+        var playerButtons = document.querySelectorAll(".btn-ult");
+        for (var i=0;i<playerButtons.length;i++)
+                {
+                    playerButtons[i].disabled = true;
+                }
+        
+        //crossroads of the classes
+        if(player.classType == "Warrior"){
+            //Damage onto all enemies
+            getArena.innerHTML += "<b>Warrior uses "+warriorUlt+"</b>"
+            enemies.forEach(function(gaunt_enemy){
+                PlayerMoves.pickEnemy(gaunt_enemy.enemyID,"ult");
+            })
+        }
+
+        else if(player.classType == "Rogue"){
+            //Boost agility and speed for a time period
+            getArena.innerHTML += "<b>Rogue used "+rogueUlt+" </b>"
+
+            let rogueUltDuration = Math.floor(maxPlayerUltTime/2);
+            console.log(rogueUltDuration)
+            let currentRogueUltTime = 0;
+
+            let trueAgility = player.agility;
+            let trueSpeed = player.speed;
+            player.agility = Math.ceil(player.agility * 1.5);
+            player.agility = Math.ceil(player.agility * 1.1);
+
+            getPlayerAgility.innerHTML = '<p class="agility-player"> Agility: '+player.agility+'</p>'
+            getPlayerSpeed.innerHTML = '<p class="speed-player">Speed: '+player.speed+'</p>'
+            let rogueUltTimeVar = setInterval(function progresssRogueUltTimer(){
+                if(isPaused){
+                    return;
+                }
+                rogueUltDuration--;
+                if(rogueUltDuration <= 0){
+                    clearInterval(rogueUltTimeVar);
+                    getArena.innerHTML += "<b>"+rogueUlt+" has expired</b>"
+                    
+                    player.agility = trueAgility;
+                    player.speed = trueSpeed;
+                    getPlayerAgility.innerHTML = '<p class="agility-player"> Agility: '+player.agility+'</p>'
+                    getPlayerSpeed.innerHTML = '<p class="speed-player">Speed: '+player.speed+'</p>'
+        
+                }
+            },1000)
+        }
+
+        else if(player.classType == "Mage"){
+            getArena.innerHTML += "<b>Mage used "+mageUlt+"</b>";
+            let mageUltDuration = Math.floor(maxPlayerUltTime)/2;
+            let mageUltTimeVar = setInterval(function progressMageUlTimer(){
+
+                if(isPaused){
+                    return;
+                }
+                player.mana += 10;
+                if(mageUltDuration % 2 == 0){
+                    getPlayerMana.innerHTML = '<p class="mana-player" style="color:#0096c7">Mana: '+player.mana+'</p>';
+                }
+                else{
+                    getPlayerMana.innerHTML = '<p class="mana-player" style="color:#023e8a">Mana: '+player.mana+'</p>'
+                }
+                mageUltDuration--;
+                if(mageUltDuration <=0){
+                    clearInterval(mageUltTimeVar);
+                    getArena.innerHTML += "<b>"+mageUlt+" has expired</b>";
+                    getPlayerMana.innerHTML = '<p class="mana-player">Mana: '+player.mana+'</p>'
+                }
+            },1000)
+        }
+
+        else if(player.classType == "Hunter"){
+            getArena.innerHTML += "<b>Hunter used "+hunterUlt+"</b>";
+            let hunterUltDuration = Math.floor(maxPlayerUltTime)/2;
+            let hunterUltTimeVar = setInterval(function progressHunterUlTimer(){
+
+                if(isPaused){
+                    return;
+                }
+                player.health += 10;
+                if(hunterUltDuration % 2 == 0){
+                    getPlayerHealth.innerHTML = '<p class="health-player" style="color:#538d22">Health: '+player.health+'</p>';
+                }
+                else{
+                    getPlayerHealth.innerHTML = '<p class="health-player" style="color:#245501">Health: '+player.health+'</p>'
+                }
+                hunterUltDuration--;
+                if(hunterUltDuration <=0){
+                    clearInterval(hunterUltTimeVar);
+                    getArena.innerHTML += "<b>"+hunterUlt+" has expired</b>";
+                    getPlayerHealth.innerHTML = '<p class="health-player">Health: '+player.health+'</p>'
+                }
+            },1000)
+        }
+
+        this.startPlayerUltTimer();
     },
 
     startPlayerTimer : function() {
@@ -442,11 +584,13 @@ let PlayerMoves = {
     },
 
     startPlayerUltTimer : function() {
+        let circleInd = document.getElementById("ult-circle-indicator");
         var playerUltButtons = document.querySelectorAll(".btn-ult");
         for (var i=0;i<playerUltButtons.length;i++)
                 {
                     playerUltButtons[i].disabled = true;
                 }
+        circleInd.classList.add("off");
         var playerUltTime = maxPlayerUltTime;
         playerUltTimerVar = setInterval(function progressPlayerTimer() {
             
@@ -465,6 +609,7 @@ let PlayerMoves = {
                 {
                     playerUltButtons[i].disabled = false;
                 }
+                circleInd.classList.remove("off")
                 //On player click disables and starts timer
                 clearInterval(playerUltTimerVar);
                 playerUltTime = maxPlayerUltTime;
@@ -509,7 +654,6 @@ let PlayerMoves = {
         let getPlayerStrength = document.querySelector(".strength-player");
 
         if(player.strength <=50) { 
-            //getBoost.style.visibility = "hidden"; 
             getBoost.disabled = true;
             getBoost.classList.remove("btn-player");
         }
@@ -530,7 +674,6 @@ let PlayerMoves = {
         let getPlayerMana = document.querySelector(".mana-player");
         let getHeal = document.querySelector(".btn-heal");
 
-        //let amountHeal = Math.floor(40 * (Math.floor((player.mana)/40 * Math.floor(10))%40 + 1) / 8   ) + 1 ;
         let amountHeal = Math.floor(40 * (Math.random() * Math.floor(10) + player.mana) / playerMaxMana )
         getArena.innerHTML += "<p>Healed Self by "+amountHeal+" HP</p>";
 
@@ -539,7 +682,6 @@ let PlayerMoves = {
 
         if(player.mana <= 40)
         {
-            //getHeal.style.visibility = "hidden";
             getHeal.disabled = true;
             getHeal.classList.remove("btn-player");
         }

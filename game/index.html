@@ -1,11 +1,12 @@
 
-
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Turn-Battler</title>
+
+    <link rel="icon" type="image/png" href="imgs/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="imgs/favicon-16x16.png" sizes="16x16" />
 
     <!-- FONTS -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Acme">
@@ -41,6 +42,7 @@
     <link rel="stylesheet" href="styles/styles2.css">
     <link rel="stylesheet" href="styles/toggle_switch.css">
     <link rel="stylesheet" href="styles/sidebar.css">
+    <!-- <link rel="stylesheet" href="styles/tailwind.css"> -->
     <style>
         .g-signout {
             display : none;
@@ -58,14 +60,7 @@
         <h2>Go ahead and choose!</h2>
         <h3>Refresh at any time to return to this page</h3>
     </div>
-    <div class="g-banner" id="gBanner">
-        <div class="g-signin2" data-onsuccess="onSignIn"></div>
-        <div class="g-signout">
-            <p>Email Address</p>
-            <p id="email" class="alert alert-danger"></p>
-            <button onclick="signOut()" class="btn btn-danger"> Sign Out </button>
-        </div>
-    </div>
+
     <label class="switch tooltipp">
         <input type="checkbox" id="music-toggle" checked>
         <span onclick="GameManager.toggleMusic()" class="slider round"></span>
@@ -79,17 +74,33 @@
 
     <aside class="nav-sidebar">
         <ul>
-            <li><span>Elixir</span></li>
-            <li><a href="#">Restores MP</a></li>
-            <li><img src="imgs/GoldCrown.png" alt=""></li>
-            <li><img src="imgs/SilverCrown.png" alt=""></li>
-            <li><img src="imgs/BronzeCrown.png" alt=""></li>
-        </ul>
-        <div class="nav-sidebar-div">
-            <p>A short para on the target</p>
-        </div>
-    </aside>
 
+            <li><span>Menu</span></li>
+            <div class="g-banner" id="gBanner">
+
+                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                <div class="g-signout">
+                    <p>Email Address</p>
+                    <p id="email" class="alert alert-danger"></p>
+                    <button onclick="signOut()" class="btn btn-danger"> Sign Out </button>
+                </div>
+            </div>
+            
+            <div style="display: flexbox; flex-direction:column; align-items: auto">
+                <img class="crown" id="GoldCrown" src="imgs/Locked_GoldCrown.png" alt="">
+                <img class="crown" id="SilverCrown" src="imgs/Locked_SilverCrown.png" alt="">
+                <img class="crown" id="BronzeCrown" src="imgs/Locked_BronzeCrown.png" alt="">
+            </div>
+            <li>EXP system coming later!</li> 
+        </ul>
+        
+    </aside>
+    <div class="floater floater-pause hidden" id="floater-pause">
+        <h2>PAUSED</h2>
+    </div>
+    <div class="floater floater-cover hidden" id="floater-cover">
+
+    </div>
     <div class="interface">        
 
         <a href="#" onclick="GameManager.setGameStart('Warrior')">
@@ -131,18 +142,18 @@
     <div class="targetmenu">
         
     </div>
-    <div class="arena">
+    <div class="arena hidden">
         <div class="instructions">
             <h2>Instructions</h2>
-            <p>This is a turn based battler that uses a turn timer displayed near your character. Your enemy will attack repeatedly on each turn. On your turn, you choose between your available actions. You and the enemy have separate timers based on your stats.<br>This section will show details during the fight.<br> Remember not to spam the action buttons as each turn takes a certain time to complete!</p>
+            <p>This is a turn based battler that uses a turn timer displayed near your character. Your enemy will attack repeatedly on each turn. On your turn, you choose between your available actions. You and the enemy have separate timers based on your stats.<br><p>Some actions such as picking an enemy for an attack or choosing an action have keybinds specified near them.</p><br>This section will show details during the fight.<br> Remember not to spam the action buttons as each turn takes a certain time to complete!</p>
         </div>
 
     </div>
-    <div class="outcome" id="outcome">
+    <div class="outcome hidden" id="outcome">
 
     </div>
 
-    <div class="enemy">
+    <div class="enemy hidden">
     </div>
 
     <div class="footer">

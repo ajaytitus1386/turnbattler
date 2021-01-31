@@ -1,5 +1,7 @@
-let playerEmail = "unknown";
+
+let playerEmail = null;
 let toggleNavStatus = false;
+let crownNames = ["GoldCrown","SilverCrown","BronzeCrown"];
 
 let toggleNav = function(){
     let getSidebar = document.querySelector(".nav-sidebar")
@@ -45,17 +47,35 @@ let toggleNav = function(){
 }
 
 
-
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
     $(".g-signin2").css("display","none");
     $(".g-signout").css("display","block");
     $("#email").text(profile.getEmail());
     playerEmail = (profile.getEmail());
-    reqPHP(playerEmail);
-
+    updateCrowns(playerEmail);
 }
 
+function updateCrowns(playerEmail){
+    if(playerEmail != null){
+        let crowns = document.getElementsByClassName("crown");
+        let counter = 0;
+        for (let index = 0; index < crowns.length; index++) {
+            var crown = crowns[index];
+            crown.src = "imgs/"+crownNames[counter++]+".png";
+        }
+
+    }
+    else if(playerEmail == null){
+        console.log(playerEmail)
+        let crowns = document.querySelectorAll("crown");
+        let counter = 0;
+        for (let index = 0; index < crowns.length; index++) {
+            var crown = crowns[index];
+            crown.src = "imgs/"+"Locked_"+crownNames[counter++]+".png";
+        }
+    }
+}
 
 
 function signOut() {
@@ -67,18 +87,7 @@ function signOut() {
         $(".g-signout").css("display","none");
         
     })
-    playerEmail = "unknown";
-}
-
-function reqPHP(playerEmail) {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          //document.getElementById("txtHint").innerHTML = this.responseText;
-        }
-      };
-    
-    xmlhttp.open("GET","inventory.php?q="+playerEmail,true);
-    xmlhttp.send();
+    playerEmail = null;
+    updateCrowns(playerEmail);
 }
 

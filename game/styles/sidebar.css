@@ -12,10 +12,10 @@
 .btn-toggle-nav {
   width: 50px;
   height: 60px;
-  background-color: #000000;
+  background-color: #808080;
   background-repeat: no-repeat;
-  background-image: url("../imgs/iconmonstr-plus-circle-thin-240.png");
-  background-size: 180%;
+  background-image: url("../imgs/iconmonstr-menu-1-240.png");
+  background-size: 50%;
   background-position: center;
   cursor: pointer;
 }
@@ -91,4 +91,9 @@
 .nav-sidebar-div p {
   color: aqua;
   font-size: 20px;
+}
+
+.crown {
+  width: 150px;
+  height: 150px;
 }

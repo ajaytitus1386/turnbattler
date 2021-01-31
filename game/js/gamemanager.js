@@ -3,7 +3,15 @@ let enemies = [];
 var gameOutcome;
 var isPaused = false;
 
-let music_active = false;
+//
+//Short Hand Abbreveations used:
+//gaunt : gauntlet
+//ult   : ultimate 
+//
+
+
+
+let music_active = true;
 var battle_music = new Audio('audio/battle-music.mp3');
 var ff7_victory = new Audio('audio/ff7_victory.wav');
 var ff7_defeat = new Audio('audio/ff7_defeat.wav');
@@ -43,16 +51,14 @@ let GameManager = {
         playerMaxHealth = player.health;
         playerMaxMana = player.mana;
 
-        maxPlayerTime = Math.floor( (2 * (player.agility + player.speed)) / ((player.agility) * (player.speed) / 120) ); //Timer max time
-        maxPlayerUltTime = Math.floor(( maxPlayerTime * player.health ) / player.speed);
+        //Timer max time
+        maxPlayerTime = Math.floor( (2 * (player.agility + player.speed)) / ((player.agility) * (player.speed) / 120) ); 
+        maxPlayerUltTime = Math.floor(3.5 * maxPlayerTime)
 
         let getInterface = document.querySelector(".interface");
-        getInterface.innerHTML = '<img src="imgs/'+classType.toLowerCase()+'.png" class="img-avatar"><div><h3>'+classType+'</h3><p class="health-player">Health : '+ player.health+'</p><p class="mana-player">Mana : '+ player.mana+'</p><p class="strength-player">Strength : '+ player.strength+'</p><p>Agility : '+ player.agility+'</p><p>Speed : '+ player.speed+'</p> <p> <p class="progress-indicator" id="player-progress-indicator"></p> <progress class="local-progress-bar" value="0" max='+maxPlayerTime+' id="player-progress-bar"> </progress> </p> </div>';
+        getInterface.innerHTML = '<img src="imgs/'+classType.toLowerCase()+'.png" class="img-avatar"><div><h3>'+classType+'</h3><p class="health-player">Health : '+ player.health+'</p><p class="mana-player">Mana : '+ player.mana+'</p><p class="strength-player">Strength : '+ player.strength+'</p><p class="agility-player">Agility : '+ player.agility+'</p><p class="speed-player">Speed : '+ player.speed+'</p> <p> <p class="progress-indicator" id="player-progress-indicator"></p> <progress class="local-progress-bar" value="0" max='+maxPlayerTime+' id="player-progress-bar"> </progress> </p> </div>';
         getInterface.style.display = "flex";
-        //getInterface.innerHTML += '<progress class="local-progress-bar" value="0" max='+maxPlayerTime+' id="player-progress-bar"></progress> <p class="progress-indicator" id="player-progress-indicator"></p>';
-        
 
-    
     },
     setPreFight: function() {
         if(music_active == true )
@@ -65,120 +71,18 @@ let GameManager = {
         let getActions = document.querySelector(".actions");
         let getArena = document.querySelector(".arena");
         getHeader.innerHTML = '<p>To the Battlefield!</p> ';
-        //getActions.innerHTML = '<a href="#" role="button" class="btn prefight" onclick="GameManager.setFight()">Looking for Battle</a>';
-        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-block tooltipp" onclick="GameManager.singleFight()">Looking for Battle <span class="tooltipptext">Finds a random enemy to fight</span> </button>'; 
+        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-block tooltipp" onclick="GameManager.gauntletFight(1)">Looking for Battle <span class="tooltipptext">Finds a random enemy to fight</span> </button>'; 
         getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-block tooltipp" onclick="GameManager.gauntletFight()">Gauntlet Battle <span class="tooltipptext">Battle multiple enemies at once</span> </button>';
+        getArena.classList.remove("hidden");
+        document.querySelector(".enemy").classList.remove("hidden");
+        document.querySelector(".outcome").classList.remove("hidden");
+
         getArena.style.visibility = "visible";
     },
 
-    setFight : function() {
-        let getHeader = document.querySelector(".header");
-        let getActions = document.querySelector(".actions");
-        let getArena = document.querySelector(".arena");
-        let getEnemy = document.querySelector(".enemy");
+    gauntletFight :function(condition) {
 
-
-        let chooseRandomEnemy = Math.floor(Math.random()*Math.floor(3));
-
-
-        
-        switch (chooseRandomEnemy) {
-            case 0:
-                enemy = enemy0;
-                break;
-            case 1:
-                enemy = enemy1;
-                break
-            case 2:
-                enemy = enemy2;
-                break
-            default:
-                break;
-        }
-
-        maxEnemyTime = Math.floor( (2 * (enemy.agility + enemy.speed)) / ((enemy.agility) * (enemy.speed) / 120) );
-
-        //Pause Timer
-        //getHeader.innerHTML = '<p>Choose your Action!</p> <button onclick="GameManager.pauseFight()" class="btn btn-primary btn-pause"> Pause </button>';
-
-
-        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-attack btn-player" onclick="PlayerMoves.playerAttackOnTimer()">Attack!  </button>';
-        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost tooltipp btn-player" onclick="PlayerMoves.calcBoost()">Boost next Attack! <span class="tooltipptext">Costs 20 Strength <br>Damage Mutliplier </span></button>'; 
-
-        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost tooltipp btn-player" onClick="PlayerMoves.ultimateAttack()">Use Ultimate Ability <span class="tooltipptext"><p class="progress-indicator" id="ult-progress-indicator"></p><progress class="local-progress-bar" value="0" max='+maxPlayerUltTime+' id="id-progress-bar"></progress></span></button>'
-
-        if (player.mana > 10)
-        {
-            getActions.innerHTML += '<button type="button" class="btn btn-success btn-lg btn-heal tooltipp btn-player" onclick="PlayerMoves.calcHeal()">Heal Self <span class="tooltipptext" id="mana-tooltip">Costs 40 Mana <br>Healing scales on Mana</span> </button>'; 
-        }
-
-        getArena.innerHTML = "<p>Choose an action above! Your enemy isn't going to wait!</p>";
-
-        startEnemyTimer(enemy);
-        getEnemy.innerHTML += '<img src="imgs/Placeholder2(1).png" alt="'+ enemy.enemyType+'" class="img-avatar"><div><h3>'+enemy.enemyType+'</h3><p class="health-enemy">Health : '+enemy.health+'</p><p class="mana-enemy">Mana : '+enemy.mana+'</p><p>Strength : '+enemy.strength+'</p><p>Agility : '+enemy.agility+'</p><p>Speed : '+enemy.speed+'</p> <p class="progress-indicator" id="enemy-progress-indicator"></p><progress class="local-progress-bar" value="0" max='+maxEnemyTime+' id="enemy-progress-bar"></progress> </div>';
-    },
-    singleFight : function() {
-        let getHeader = document.querySelector(".header");
-        let getActions = document.querySelector(".actions");
-        let getArena = document.querySelector(".arena");
-        let getEnemy = document.querySelector(".enemy");
-        let getPlayerHealth = document.querySelector(".health-player");
-
-        noOfEnemies = 1;
-
-        player.health = Math.floor(player.health * noOfEnemies)
-        getPlayerHealth.innerHTML = 'Health : '+player.health;
-
-        for(let i=0;i<noOfEnemies;i++)
-        {
-            let chooseRandomEnemy = Math.floor(Math.random()*Math.floor(3));
-
-            switch (chooseRandomEnemy) {
-                case 0:
-                    enemy = enemy0;
-                    break;
-                case 1:
-                    enemy = enemy1;
-                    break
-                case 2:
-                    enemy = enemy2;
-                    break
-                default:
-                    break;
-            }
-            maxEnemyTime = Math.floor( (2 * (enemy.agility + enemy.speed)) / ((enemy.agility) * (enemy.speed) / 100) );
-            
-            var enemyTimerVar;
-            var enemyTime;
-            let enemyID = i;
-            let enemyDefeat = false;
-            let gaunt_enemy = new Enemies(enemyID,enemy,maxEnemyTime,enemyTimerVar,enemyTime,enemyDefeat);
-            enemies.push(gaunt_enemy);
-        }
-        this.gameOutcomeLoop(enemies);
-
-        getHeader.innerHTML = '<p>Choose your Action!</p> <button onclick="GameManager.pauseFight()" class="btn btn-primary btn-pause"> Pause </button>';
-
-        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-attack btn-player" onclick="PlayerMoves.playerAttackOnTimerGauntlet(enemies)">Attack!  </button>';
-        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost tooltipp btn-player" onclick="PlayerMoves.calcBoost()">Boost next Attack! <span class="tooltipptext">Costs 20 Strength <br>Damage Mutliplier </span></button>'; 
-        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-ult tooltipp btn-player" onClick="PlayerMoves.ultimateAttack()">Use Ultimate Ability <span class="tooltipptext"><p class="progress-indicator" id="ult-progress-indicator"></p><progress class="local-progress-bar" value="0" max='+maxPlayerUltTime+' id="id-progress-bar"></progress></span></button>'
-
-        if (player.mana > 10)
-        {
-            getActions.innerHTML += '<button type="button" class="btn btn-success btn-lg btn-heal tooltipp btn-player" onclick="PlayerMoves.calcHeal()">Heal Self <span class="tooltipptext" id="mana-tooltip">Costs 40 Mana <br>Healing scales on Mana</span> </button>'; 
-        }
-
-        getArena.innerHTML = "<p>Choose an action above! Your enemy isn't going to wait!</p>";
-        
-        enemies.forEach(function(gaunt_enemy)
-        {
-            getEnemy.innerHTML += '<img src="imgs/Placeholder2(1).png" alt="'+ gaunt_enemy.enemy.enemyType+'" class="img-avatar"><div><h3>'+gaunt_enemy.enemy.enemyType+'</h3><p class="health-enemy" id="health-'+gaunt_enemy.enemyID+'">Health : '+gaunt_enemy.enemy.health+'</p><p id="mana-'+gaunt_enemy.enemyID+'">Mana : '+gaunt_enemy.enemy.mana+'</p><p>Strength : '+gaunt_enemy.enemy.strength+'</p><p>Agility : '+gaunt_enemy.enemy.agility+'</p><p>Speed : '+gaunt_enemy.enemy.speed+'</p> <p class="progress-indicator" id="enemy-progress-indicator-'+gaunt_enemy.enemyID+'"></p><progress class="local-progress-bar" value="0" max='+gaunt_enemy.maxEnemyTime+' id="enemy-progress-bar-'+gaunt_enemy.enemyID+'"></progress> </div>';
-            startEnemyTimerGauntlet(gaunt_enemy);
-        });
-    },
-
-    gauntletFight :function() {
-
+        condition = condition || null;
         let getHeader = document.querySelector(".header");
         let getActions = document.querySelector(".actions");
         let getArena = document.querySelector(".arena");
@@ -187,6 +91,10 @@ let GameManager = {
         
 
         noOfEnemies = Math.floor(Math.random()*Math.floor(2)) + 2;
+
+        if(condition == 1){
+            noOfEnemies = 1;
+        }
 
         player.health = Math.floor(player.health * noOfEnemies);
         getPlayerHealth.innerHTML = 'Health : '+player.health;
@@ -220,18 +128,57 @@ let GameManager = {
         }
         this.gameOutcomeLoop(enemies);
 
-        getHeader.innerHTML = '<p>Choose your Action!</p> <button onclick="GameManager.pauseFight()" class="btn btn-primary btn-pause" id="pause-btn"> Pause </button>';
-        getHeader.innerHTML += '<button onclick="GameManager.resumeFight()" class="btn btn-warning btn-pause hidden" id="resume-btn"> Resume </button>';
-        
-        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-attack btn-player" onclick="PlayerMoves.playerAttackOnTimerGauntlet(enemies)">Attack!  </button>';
-        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost tooltipp btn-player" onclick="PlayerMoves.calcBoost()">Boost next Attack! <span class="tooltipptext">Costs 20 Strength <br>Damage Mutliplier </span></button>';
+        getHeader.innerHTML = '<p>Choose your Action!</p> <button onclick="GameManager.pauseFight()" class="btn btn-primary btn-pause" id="pause-btn"> Pause(P) </button>';
 
-        getActions.innerHTML += '<button type="button" class="btn btn-primary btn-lg btn-ult tooltipp btn-player" onClick="PlayerMoves.startPlayerUltTimer()">Use Ultimate Ability <span class="tooltipptext"><p class="progress-indicator" id="ult-progress-indicator"></p><progress class="local-progress-bar" value="0" max='+maxPlayerUltTime+' id="ult-progress-bar"></progress></span></button>'
-        //PlayerMoves.startPlayerUltTimer();
+
+        getHeader.innerHTML += '<button onclick="GameManager.resumeFight()" class="btn btn-warning btn-pause hidden" id="resume-btn"> Resume(R) </button>';
+        
+        getActions.innerHTML = '<button type="button" class="btn btn-danger btn-lg btn-attack btn-player" id="player-normal-attack" onclick="PlayerMoves.playerAttackOnTimerGauntlet(enemies)">Attack(A)!  </button>';
+        getActions.innerHTML += '<button type="button" class="btn btn-warning btn-lg btn-boost tooltipp btn-player" id="player-boost" onclick="PlayerMoves.calcBoost()">Boost next Attack(B)! <span class="tooltipptext">Costs 20 Strength <br>Damage Mutliplier </span></button>';
+
+        getActions.innerHTML += '<button type="button" class="btn btn-primary btn-lg btn-ult tooltipp btn-ult" id="player-ult" onClick="PlayerMoves.playerUltOnTimerGauntlet(enemies)">Use Ultimate Ability(X)<span class="circle-indicator" id="ult-circle-indicator"></span> <span class="tooltipptext"><p class="progress-indicator" id="ult-progress-indicator"></p><progress class="local-progress-bar" value="0" max='+maxPlayerUltTime+' id="ult-progress-bar"></progress></span></button>'
         if (player.mana > 10)
         {
-            getActions.innerHTML += '<button type="button" class="btn btn-success btn-lg btn-heal tooltipp btn-player" onclick="PlayerMoves.calcHeal()">Heal Self <span class="tooltipptext" id="mana-tooltip">Costs 40 Mana <br>Healing scales on Mana</span> </button>'; 
+            getActions.innerHTML += '<button type="button" class="btn btn-success btn-lg btn-heal tooltipp btn-player" id="player-heal-self" onclick="PlayerMoves.calcHeal()">Heal Self(Q) <span class="tooltipptext" id="mana-tooltip">Costs 40 Mana <br>Healing scales on Mana</span> </button>';
         }
+
+        //Adding keybinds
+        window.addEventListener('keydown',(event)=> {
+            if(event.key == 'p'){
+                GameManager.pauseFight();
+            }
+            if(event.key == 'r' ){
+                GameManager.resumeFight();
+            }
+            if(event.key == 'a'){
+                if($('.btn-player')[0].disabled == false){
+                    $('#player-normal-attack').click();
+                } 
+            }
+
+            if(event.key == 'b'){
+
+                if($('.btn-player')[0].disabled == false){
+                    $('#player-boost').click();
+                } 
+            }
+            if(event.key == 'x'){
+                if( $('.btn-ult')[0].disabled == false){
+                    
+                    $('#player-ult').click();
+                } 
+            }
+
+            if(player.mana > 10){
+                if(event.key == 'q');
+                {
+                    if($('.btn-player')[0].disabled == false){
+                        $('#player-heal-self').click();
+                    } 
+                }
+            }
+        })
+
 
         getArena.innerHTML = "<p>Choose an action above! Your enemy isn't going to wait!</p>";
         
@@ -265,12 +212,12 @@ let GameManager = {
                 }
                 else{
                     allEnemiesDead = false;
-                    //break;
+                    
                 }
             };
             
             if (noOfEnemies == noOfDead){
-                //WIN CONDI
+                //WIN CONDITION
                 getEnemyHealth = document.getElementById("health-"+enemyID);
                 getOutcome.classList.add("reveal");
                 getOutcome.innerHTML = "<p class='arena-player-win'>Well Done! You defeated your enemy!</p>";
@@ -291,24 +238,18 @@ let GameManager = {
         isPaused = true;
         battle_music.volume = 0.05;
         $('#pause-btn').addClass('hidden');
+        $('#floater-pause').removeClass('hidden');
+        $('#floater-cover').removeClass('hidden');
         $('#resume-btn').removeClass("hidden");
-        // var playerButtons = document.querySelectorAll(".btn-player");
-        // for (var i=0;i<playerButtons.length;i++)
-        //         {
-        //             playerButtons[i].disabled = true;
-        //         }
     },
 
     resumeFight : function() {
         isPaused = false;
         battle_music.volume = 0.1;
         $('#resume-btn').addClass('hidden');
+        $('#floater-pause').addClass('hidden');
+        $('#floater-cover').addClass('hidden');
         $('#pause-btn').removeClass("hidden");
-        // var playerButtons = document.querySelectorAll(".btn-player");
-        // for (var i=0;i<playerButtons.length;i++)
-        //         {
-        //             playerButtons[i].disabled = false;
-        //         }
     },
     toggleMusic : function() {
         if($("#music-toggle")[0].checked){
